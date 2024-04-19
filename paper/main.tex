@@ -101,11 +101,9 @@
 
 We present \emph{CityJSON Text Sequences} (CityJSONSeq), a format based on \emph{JSON Text Sequences} and CityJSON\@. 
 CityJSONSeq was added to the CityJSON version 2.0 standard that was recently released, and it allows us to stream very large 3D city models.
-The main idea is to decompose a CityJSON file into its individual features (eg each Building, each Bridge, etc.) and create several JSON objects of a newly defined type: \texttt{CityJSONFeature}.
+The main idea is to decompose a CityJSON dataset into its individual features (eg each Building, each Bridge, etc.) and create several indepedent JSON objects of a newly defined type: \texttt{CityJSONFeature}.
 We elaborate on the engineering decisions that were taken to develop CityJSONSeq, we present the open-source software we have developed to convert to and from CityJSONSeq, and we discuss different aspects of the new format, \eg\ size, usability, etc.
-
-We consider CityJSONSeq to be a better format than CityJSON, since it is at about 10\% more compact, takes an order of magnitude less time to process and uses significantly less memory for certain operations.
-
+We consider CityJSONSeq to be a better format than CityJSON because: (1) once serialised it is about 10\% more compact; (2) it takes an order of magnitude less time to process; and (3) it uses significantly less memory for certain operations.
 }
 
 \keywords{3D city modelling, CityJSON, CityGML, streaming}
@@ -254,6 +252,10 @@ If in the stream the linked surface has not appeared yet, the receiver cannot pr
 It is not always possible to (re-)order a CityGML file so that all the references can be resolved without having to store locally information until it appears in the stream.
 However, it is always possible to resolve the \emph{XLinks} before streaming a dataset (that is copy the geometry of the 6th surface to the cube), but this means that its size is increased, and that converting back to the original file will not be possible.
 
+%
+
+For the \emph{GeoJSON} format~\citep{IETF-GeoJSON}, which follows the Simple Feature paradigm, creating a stream is trivial since each of the features in the dataset becomes one JSON object and one line~\citep{IETF-GeoJSONSeq}.
+There are no links possible between features, they are all independent.
 
 %
 
@@ -390,14 +392,13 @@ It contains two sub-commands:
   \end{threeparttable}
 \end{table*}
 
-With \emph{cjseq}, we have converted several publicly available files (details of files at \url{https://cityjson.org/datasets}), and Table~\ref{tab:stats} shows an overview of the files stored both in CityJSON and CityJSONSeq.
+With \emph{cjseq}, we have converted several publicly available files (details of files at \url{https://github.com/cityjson/paper_cjseq/tree/main/data}), and Table~\ref{tab:stats} shows an overview of the files stored both in CityJSON and CityJSONSeq.
 % TODO: setup website for hosting the files
 
-First observe that---contrary to intuition---the size of a dataset, serialised to a JSON file, stored as a CityJSONSeq is around 12\% more compact than as a CityJSON, and in the case of \textbf{3DBAG} it is 36\% compacter.
-The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0''), and no not increase to several millions.
-For instance, the dataset \textbf{Helsinki} contains more than 3 millions vertices, but its largest feature contains only but 2202.
-The fact that many indices are used for geometries (and for textures) means that if large numbers are used then the size of the file will grow.
-As a result, the CityJSONSeq stored in a file is only but 72\% of the original CityJSON file.
+First observe that---contrary to intuition---the size of a dataset serialised as a CityJSONSeq file is around 12\% more compact than serialised as a CityJSON file, and in the case of \textbf{3DBAG} it is 36\% compacter.
+The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0''), and do not increase to several millions.
+For instance, the dataset \textbf{Helsinki} contains a total of more than 3 millions vertices, but its largest feature contains only but 2202 vertices.
+The fact that many indices are used for representing the geometries (and for the textures) means that if several large numbers are used then the size of the file will grow; if they maximum vertex index is around 2000 for each feature, then the file size will be less than the original file.
 Only one dataset sees its size slightly increased when serialised to a CityJSONSeq file (\textbf{Rotterdam}).
 This is caused, we believe, by the fact that the dataset has textures that are shared by most of the buildings, and the \texttt{"appearance"} property must be repeated for each of the feature (in the CityJSON file it is only stored once and referenced by all buildings).
 
@@ -408,18 +409,22 @@ This is caused, we believe, by the fact that the dataset has textures that are s
 We compare the speed and memory footprint of accessing each city object in a dataset.
 This operation is common in applications that manipulate city models.
 
-When a city model is stored in its entirety in a CityJSON object, we need to load the whole CityJSON object into memory in order to access the transform and vertices objects for instance.
+When a city model is stored in its entirety in one CityJSON object, we need to load the whole CityJSON object into memory in order to access the \texttt{"transform"} and \texttt{"vertices"} properties for instance.
 
 With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one.
-As shown in the experiments below, this allows for a very efficient operation in terms of both CPU and memory usage.
-Operations that would highly benefit from this are subsetting, merging a citymodel.
-Things like EPSG reassignment or metadata updates wouldn't even require to loop through the features, just to alter the first object in the file.
+As shown in the experiments below, this allows for very efficient operations in terms of both CPU and memory usage.
+Operations that would highly benefit from this are subsetting and merging a citymodel.
+Operations like modifying the CRS or updating the metadata would not even require to loop through the features, just to alter the first object in the file.
 
-We processed all the datasets from Table~\ref{tab:datasets} with 2 simple Python scripts that loop through the city objects and their geometries and increment a global counter for the geometry type (\texttt{Solid} or \texttt{MultiSurface}).
+%
+
+We have processed all the datasets from Table~\ref{tab:datasets} with two simple Python scripts that loop through the city objects and their geometries, and increment a global counter for the geometry type (\texttt{Solid} or \texttt{MultiSurface}).
+This is just an example of a simple local operation, any other operation such as calculating the area of the façades or counting the number of windows could have been performed.
 The results for both the maximum memory footprint\footnote{The resident set size (RSS) was used, which is the portion of main memory occupied by the Python script.} and the time used are shown in Table~\ref{tab:ramtime}.
+The scripts are available at \url{https://github.com/cityjson/paper_cjseq/tree/main/scripts/}.
 \begin{table*}
   \centering
-  \caption{}
+  \caption{Comparison of the processing time and max RAM use for processing the same data stored in a CityJSON file and a CityJSONSeq file.}
   \small
   \begin{tabular}
     {@{}lcrrcrrr@{}}\toprule
@@ -452,17 +457,17 @@ Operations like calculating volumes, merging and subsetting files, finding city 
 \label{sec:discussion}
 
 \begin{itemize}
-  \item CityJSONSeq is an attractive alternative to CityJSON, in most uses it is better to use since it is compacter, processing it uses less memory and is faster.
   \item We have kept most of the structure of CityJSON so that parsers do not need to be adapted much.
+  \item CityJSONSeq is an attractive alternative to CityJSON, in most uses it is better to use since it is compacter, processing it uses less memory and is faster.
   \item it opens up many possibilities for processing large 3dcm by using Unix pipes. A few of the tools developed for CityJSON are already reading/writing to stdin/stdout, so they can be chained together.
-  \item cjseqview, cjseqval are two of them, but developing others to eg calculate volumes or repair geometries would be trivial
-  \item the nice part is that they tools do not need to be written in the same language, one pipeline can have tools built in Python and Rust and C++ and it all works nicely.
+  \item cjseqview, cjseqval are two of them, but developing others to eg filter, calculate volumes or repair geometries would be trivial
+  \item the nice part is that the tools do not need to be written in the same language, one pipeline can have tools built in Python and Rust and C++ and it all works nicely.
   \item extensions: these should be placed in the metadata or collection
 \end{itemize}
 
 Disadvantages:
 \begin{itemize}
-  \item     Software implementing CityJSON need to account for both regular CityJSON and CityJSONSeq.
+  \item  Software implementing CityJSON need to account for both regular CityJSON and CityJSONSeq.
   \item  In case of many, small, interconnecting CityObjects, a global vertex list would provide better compression than the separate vertex lists of the CityJSONFeatures.
   \item  Appearances (esp. Material) are relatively heavy objects with many properties. If an appearance is shared across most CityObjects, duplicating it in each Feature could negate the effect of small vertex indices and actually increase the file size compared to a regular CityJSON file. This is just theorizing, haven't tested.
 \end{itemize}
