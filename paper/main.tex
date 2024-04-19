@@ -179,26 +179,28 @@ As shown in Figure~\ref{fig:cj_idea}, a CityJSON object, which is a JSON object,
   \item \texttt{"type"}: it must be \texttt{"CityJSON"};
   \item \texttt{"version"}: \texttt{"2.0"} is the current version;
   \item \texttt{"metadata"}: different metadata related to the dataset can be stored. The most important is the definition of the coordinate reference system (CRS)
-  \item \texttt{"transform"}: CityJSON \texttt{"vertices"} are compressed and stored with integers only. The parameters of this property allows us to convert from those to real-world coordinates.
-  \item \texttt{"CityObjects"}: a dictionary where the properties are the identifiers of the city objects (\emph{IDs}), which are any CityGML city objects (for instance a \texttt{Building}, a \texttt{BuildingPart}, a \texttt{SolitaryVegetationObject}, etc.).
-  Each of the city objects are listed one after the others, even if some are \texttt{"children"} of others 
-  As an example, for a \texttt{Building} containing 2 parts, the 3 objects will be represented at the same level and linked by their \emph{IDs}, as shown in Figure~\ref{fig:parents_children}. The schema is thus flat and all hierarchies have been removed.
+  \item \texttt{"transform"}: CityJSON \texttt{"vertices"} are compressed and stored as integers only. The parameters of this property allow us to convert from those integers back to real-world coordinates.
+  \item \texttt{"CityObjects"}: a dictionary where the properties are the identifiers of the city objects (\emph{IDs}), which are any CityGML city object (for instance a \texttt{Building}, a \texttt{BuildingPart}, a \texttt{SolitaryVegetationObject}, etc.).
+  Each of the city objects is listed one after the other, even if some are \texttt{"children"} of others.
+  As an example, for a \texttt{Building} containing 2 parts, the 3 objects will be represented at the same level and linked by their \emph{IDs}, as shown in Figure~\ref{fig:parents_children}.
+  The schema is thus flat and all hierarchies have been removed.
   Each city object can have a \texttt{"parents"} and/or a \texttt{"children"} property, and this is how in the snippet the building \texttt{"id-1"} is linked to its 2 parts.
   % We define 2nd-level city objects as having a \texttt{"parent"}.
   The fact that a dictionary is used means that developers have direct access to the city objects through their IDs (and also in constant time if a hashmap is used to implement the dictionary while parsing the file).
-  \item \texttt{"vertices"}: The 3D geometric primitives are those of CityGML, and multi/composite solids having several parts are supported.
-  A geometric primitive does not list all the coordinates of its vertices, rather the coordinates of the vertices are stored in a separate array (the \texttt{"vertices"} property of the CityJSON object), and geometric primitives refer to the position of a vertex in that array.
-  The indexing mechanism of the format \emph{Wavefront OBJ}\footnote{\url{https://en.wikipedia.org/wiki/Wavefront_.obj_file}} is reused, because it has been used for many years, with success, in the computer graphics community.
+  \item \texttt{"vertices"}: The 3D geometric primitives are those of CityGML, and multi/composite solids with several parts are supported.
+  A geometric primitive does not list all the coordinates of its vertices, rather the coordinates of the vertices are stored in a separate array (the \texttt{"vertices"} property of the CityJSON object), and the geometric primitives refer to the position of a vertex in that array.
+  The indexing mechanism of the format \emph{Wavefront OBJ}\footnote{\url{https://en.wikipedia.org/wiki/Wavefront_.obj_file}} is reused, because it has been successfully used for many years in the computer graphics community.
   There are several advantages to this approach.
-  First, the files can be compressed: 3D vertices are often shared by several surfaces, and repeating them can be costly (especially if they are very precise, often sub-millimetre is used).
-  Second, this increases the topological relationships that are explicitly stored in the file, and several operations (\eg\ are 2 buildings adjacent?) can be sped up and made more robust.
+  First, the files can be compressed: 3D vertices are often shared by several surfaces, and repeating them can be costly, especially if they are very precise (sub-millimetre precision is often used).
+  Second, this approach increases the topological relationships that are explicitly stored in the file, and several operations (\eg\ are 2 buildings adjacent?) can be sped up and made more robust.
   Third, it is very easy to convert to a representation listing all coordinates; the inverse is not true. 
-  However, this is where the streaming of geometries is problematic: the array of "vertices" can for very large areas, contains several millions vertices.
-  To be able to reconstruct one Building, all the \texttt{"vertices"} need to be in memory, which can be for streaming first waiting for millions of unused vertices to be transferred.
+  However, this is where the streaming of geometries is problematic: the array of "vertices" contains several millions vertices, especially for very large areas, .
+  To be able to reconstruct one Building, all the \texttt{"vertices"} need to be in memory, which means waiting for millions of unused vertices to be loaded.
   \item \texttt{"appearances"}: Both textures and materials for surfaces are supported.  
   The material of a surface is represented with the X3D specifications\footnote{\url{https://en.wikipedia.org/wiki/X3D}}, and for the textures the COLLADA specifications\footnote{\url{https://www.khronos.org/collada/}} are reused.
   \item \texttt{"geometry-templates"} 
-  Geometry templates are used to represent identical geometries several times, they only need to be defined once (and translations/rotations/scaling are applied). They are used for city objects like trees and lamp posts. 
+  Geometry templates are used to represent identical geometries several times, they only need to be defined once (and translations/rotations/scaling are applied).
+  They are used for city objects like trees and lamp posts. 
 \end{enumerate}
 
 
@@ -228,7 +230,7 @@ As shown in Figure~\ref{fig:cj_idea}, a CityJSON object, which is a JSON object,
     "id-77": {}
   }
 \end{lstlisting}
-  \caption{CityJSON mechanism to flatten out the schema: each city object are stored in a flat list, and they are linked together with the properties \texttt{"parents"} and \texttt{"children"}.}%
+  \caption{CityJSON mechanism to flatten out the schema: the city objects are stored in a flat list, and they are linked together with the properties \texttt{"parents"} and \texttt{"children"}.}%
 \label{fig:parents_children}
 \end{figure}
 
@@ -248,13 +250,13 @@ For GML-based formats (which are feature-centric), modifying a file for the purp
 However, notice that this is only true for simple files and GML features stored following the Simple Feature paradigm~\citep{OGC-SF}.
 For more complex data models like CityGML where \emph{Implicit Geometries} and \emph{XLinks} are used (for reusing geometries and for storing some topological relationships), the conversion often needs a large amount of pre-processing.
 The presence of \emph{XLinks} means that references between elements are possible (\eg\ reusing surfaces), but if in the stream the referenced surface has not appeared, the receiver cannot process the information.
-It is not always possible to order a CityGML files so that all the references can be resolved without having to store locally information until it appears in the stream.
+It is not always possible to order CityGML files so that all the references can be resolved without having to store locally information until it appears in the stream.
 It is always possible to resolve the \emph{XLinks} before streaming a dataset, but this means that its size is increased, and that converting back to the original file will not be possible.
-
+%@HUGO: I don't understand the last 2 sentenses.
 
 %
 
-For formats that use a global indexing of vertices (as written above, CityJSON is one of them, and  most formats used in computer graphics for meshes also, \eg\ OBJ and STL), the reorganisation of the elements in a file is more complex but nonetheless possible.
+For formats that use a global indexing of vertices (as mentioned above, CityJSON is one of them, and  most formats used in computer graphics for meshes also, \eg\ OBJ and STL), the reorganisation of the elements in a file is more complex but nonetheless possible.
 \citet{Isenburg03} describe algorithms and tools that interleave the vertices and faces in a file (instead of having one large list of vertices at the end) and add simple tags to inform that vertices are not to be used anymore (and thus can be freed from memory).
 This allows us, in theory, to process/edit/manipulate infinitely large meshes, since they never have to be completely loaded in memory.
 The idea is exemplified by the construction of gridded terrains that are gigabytes in size~\citep{Isenburg06-1}.
