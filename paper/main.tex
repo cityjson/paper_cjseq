@@ -249,11 +249,10 @@ In the context of geo-information, a \emph{stream} is a sequence of data that is
 For GML-based formats (which are feature-centric), modifying a file for the purpose of streaming is usually a simple task that involves sending the features in the dataset one-by-one.
 However, notice that this is only true for simple files and GML features stored following the Simple Feature paradigm~\citep{OGC-SF}.
 For more complex data models like CityGML where \emph{Implicit Geometries} and \emph{XLinks} are used, the conversion often needs a large amount of pre-processing.
-
-\emph{XLinks} are links links between elements in a file (similar to \emph{pointers} in a computer program), a concrete example in a CityGML file is a cube that lists the geometries of 5 of its surfaces, but its 6th surface is simply a link to another surface somewhere else in the file (which belongs to another building for instance).
-If in the stream the linked surface has not appeared yet, the receiver cannot process the cube and needs to wait for that specific surface to appear.
+\emph{XLinks} are links between elements in a file (similar to \emph{pointers} in a computer program), a concrete example in a CityGML file is a cube that lists the geometries of 5 of its surfaces, but its 6th surface is simply a link to another surface somewhere else in the file (which belongs to another building, for instance).
+If in the stream the linked surface has not appeared yet, the receiver cannot process the cube and needs to wait for that specific 6th surface to appear.
 It is not always possible to (re-)order a CityGML file so that all the references can be resolved without having to store locally information until it appears in the stream.
-However, it is always possible to resolve the \emph{XLinks} before streaming a dataset, but this means that its size is increased, and that converting back to the original file will not be possible.
+However, it is always possible to resolve the \emph{XLinks} before streaming a dataset (that is copy the geometry of the 6th surface to the cube), but this means that its size is increased, and that converting back to the original file will not be possible.
 
 
 %
