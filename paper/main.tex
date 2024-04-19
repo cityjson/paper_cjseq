@@ -102,10 +102,9 @@
 We present \emph{CityJSON Text Sequences} (CityJSONSeq), a format based on \emph{JSON Text Sequences} and CityJSON\@. 
 CityJSONSeq was added to the CityJSON version 2.0 standard that was recently released, and it allows us to stream very large 3D city models.
 The main idea is to decompose a CityJSON file into its individual features (eg each Building, each Bridge, etc.) and create several JSON objects of a newly defined type \texttt{CityJSONFeature}.
-We elaborate on the engineering decisions that were taken to develop CityJSONSeq, we present the open-source software we have developed to convert to/from CityJSONSeq, and discuss different aspects of the resulting CityJSONSeq, \eg\ size, usability, etc.
+We elaborate on the engineering decisions that were taken to develop CityJSONSeq, we present the open-source software we have developed to convert to and from CityJSONSeq, and we discuss different aspects of the new format, \eg\ size, usability, etc.
 
-We think that CityJSONSeq is a better format than CityJSON
-CityJSONSeq is at about 10\% more compacter, takes an order of magnitude less time to process and uses significantly less memory (for some operations, not all).
+We consider CityJSONSeq to be a better format than CityJSON, since it is at about 10\% more compact, takes an order of magnitude less time to process and uses significantly less memory for certain operations.
 
 }
 
@@ -132,10 +131,12 @@ The first official release of CityJSON (version 1.0) was a success:
   \item several implementations, \eg\ FME, were developed.
 \end{enumerate}
 
+%@HUGO several implementations or plugins?
+
 %
 
 However, the version 1.0 of CityJSON had one limitation: its structure for storing the coordinates of the geometries (see Figure~\ref{fig:cj_idea}) made the \emph{streaming} of very large datasets complex, if not impossible.
-Because more and more datasets from cities are very large (it is not uncommon to have CityGML-GML files over 2GB), this made the processing of CityJSON difficult.
+Since city datasets are progressively becoming larger (it is not uncommon to have CityGML-GML files of over 2GB), the large data volume can hinder the processing of CityJSON files.
 As further defined in Section~\ref{sec:streaming}, streaming refers to the possibility of downloading/transferring/processing a dataset without having to load it all in memory.
 
 %
@@ -154,11 +155,11 @@ This allows us to avoid a long list of vertices that need to be indexed, as it i
 
 %
 
-We have implemented and released an open-source program to convert between in either direction between CityJSON and CityJSONSeq objects; we describe it in Section~\ref{sec:experiments}.
+We have implemented and released an open-source software to convert between CityJSON and CityJSONSeq objects; we describe it in Section~\ref{sec:experiments}.
 We also analyse the size of CityJSONSeq files versus CityJSON files, and that for several real-world datasets.
 It can be observed that one advantage of CityJSONSeq, besides that files containing thousands of features can be processed with a low memory footprint, is that it compresses further the CityJSON files by around 12\%, sometimes more.
 We discuss in Section~\ref{sec:experiments} the reasons for this interesting finding.
-Finally, we will also present the open-source software that are currently being developed to process streams of CityJSON datasets.
+Finally, we will also present the open-source software for processing streams of CityJSON datasets, that is currently being developed.
 
 %%%
 %
