@@ -451,7 +451,7 @@ Operations like calculating volumes, merging and subsetting files, finding city 
 \label{sec:discussion}
 
 \begin{itemize}
-  \item CityJSONSeq is an attractive alternative to CityJSON, in most uses it is better to use since it is compacter, processing it uses less memory and is faster.
+  \item CityJSONSeq is an attractive alternative to CityJSON; in most uses it is more compact, its processing requires less memory and it is faster.
   \item We have kept most of the structure of CityJSON so that parsers do not need to be adapted much.
   \item it opens up many possibilities for processing large 3dcm by using Unix pipes. A few of the tools developed for CityJSON are already reading/writing to stdin/stdout, so they can be chained together.
   \item cjseqview, cjseqval are two of them, but developing others to eg calculate volumes or repair geometries would be trivial
@@ -461,7 +461,7 @@ Operations like calculating volumes, merging and subsetting files, finding city 
 
 Disadvantages:
 \begin{itemize}
-  \item     Software implementing CityJSON need to account for both regular CityJSON and CityJSONSeq.
+  \item  Software implementing CityJSON needs to account for both regular CityJSON and CityJSONSeq.
   \item  In case of many, small, interconnecting CityObjects, a global vertex list would provide better compression than the separate vertex lists of the CityJSONFeatures.
   \item  Appearances (esp. Material) are relatively heavy objects with many properties. If an appearance is shared across most CityObjects, duplicating it in each Feature could negate the effect of small vertex indices and actually increase the file size compared to a regular CityJSON file. This is just theorizing, haven't tested.
 \end{itemize}
