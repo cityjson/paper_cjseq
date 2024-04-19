@@ -320,7 +320,7 @@ CityJSONSeq follows the specifications of \texttt{ndjson} (newline delimited JSO
 Note that a \texttt{CityJSONFeature} object does not contain all the information that is required for parsing the feature. 
 Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geometry-templates"} must be known by the client in order to correctly reconstruct and georeference the city objects. 
 The rule \#4 ensures that those are available. 
-The CityJSON object must contain \texttt{"transform"} and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but be empty (to ensure that the JSON object is valid).
+The CityJSON object must contain \texttt{"transform"} and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but they must be empty (to ensure that the JSON object is valid).
 
 %
 
@@ -392,11 +392,12 @@ It contains two sub-commands:
 With \emph{cjseq}, we have converted several publicly available files (details of files at \url{https://cityjson.org/datasets}), and Table~\ref{tab:stats} shows an overview of the files stored both in CityJSON and CityJSONSeq.
 % TODO: setup website for hosting the files
 
-First observe that---contrary to intuition---the size of a dataset, serialised to a JSON file, stored as a CityJSONSeq is around 12\% compacter than as a CityJSON, and in the case \textbf{3DBAG} it is 36\% compacter.
-The main reason is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0''), and no not increase to several millions.
+First observe that---contrary to intuition---the size of a dataset, serialised to a JSON file, stored as a CityJSONSeq is around 12\% more compact than as a CityJSON, and in the case of \textbf{3DBAG} it is 36\% compacter.
+The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0''), and no not increase to several millions.
+%@Hugo: Sentence above not super clear. 
 For instance, the dataset \textbf{Helsinki} contains more than 3 millions vertices, but its largest feature contains only but 2202.
 As a result, the CityJSONSeq stored in a file is only but 72\% of the original CityJSON file.
-Only one dataset sees its size slightly increase when serialised to a CityJSONSeq file (\textbf{Rotterdam}).
+Only one dataset sees its size slightly increased when serialised to a CityJSONSeq file (\textbf{Rotterdam}).
 This is caused, we believe, by the fact that the dataset has textures that are shared by most of the buildings, and the \texttt{"appearance"} property must be repeated for each of the feature (in the CityJSON file it is only stored once and referenced by all buildings).
 
 
@@ -409,12 +410,12 @@ This operation is common in applications that manipulate city models.
 When a city model is stored in its entirety in a CityJSON object, we need to load the whole CityJSON object into memory in order to access the transform and vertices objects for instance.
 
 With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one.
-As shown in the experiments below, this allows a very efficient operation in terms of both CPU and memory usage.
+As shown in the experiments below, this allows for a very efficient operation in terms of both CPU and memory usage.
 Operations that would highly benefit from this are subsetting, merging a citymodel.
 Things like EPSG reassignment or metadata updates wouldn't even require to loop through the features, just to alter the first object in the file.
 
-We processed all the datasets from Table~\ref{tab:datasets} with 2 simple Python scripts that loops through each city objects and their geometries and increments a global counter for the geometry type (\texttt{Solid} or \texttt{MultiSurface}).
-The results for both the maximum memory footprint\footnote{The resident set size (RSS) was used, which is the portion of main memory occupied by the Python script.} and the time used is shown in Table~\ref{tab:ramtime}.
+We processed all the datasets from Table~\ref{tab:datasets} with 2 simple Python scripts that loop through the city objects and their geometries and increment a global counter for the geometry type (\texttt{Solid} or \texttt{MultiSurface}).
+The results for both the maximum memory footprint\footnote{The resident set size (RSS) was used, which is the portion of main memory occupied by the Python script.} and the time used are shown in Table~\ref{tab:ramtime}.
 \begin{table*}
   \centering
   \caption{}
@@ -440,9 +441,8 @@ The results for both the maximum memory footprint\footnote{The resident set size
   \label{tab:ramtime}
 \end{table*}
 
-The results indicate that there is a very significant benefit to using CityJSONSeq, compared to regular CityJSON files.
-At least for operations that do not require analysing or calculating city objects that are close to each other.
-Operations like calculating volumes, merging and subsetting files, finding city objects having specific attributes, etc.\ will all use significantly less memory and be significantly faster.
+The results indicate that there is a very significant benefit to using CityJSONSeq, compared to regular CityJSON files, at least for operations that do not require analysing or calculating city objects that are close to each other.
+Operations like calculating volumes, merging and subsetting files, finding city objects with specific attributes, etc.\ will all use significantly less memory and will be significantly faster.
 
 
 %%%
