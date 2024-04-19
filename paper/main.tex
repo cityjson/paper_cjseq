@@ -128,10 +128,10 @@ The first official release of CityJSON (version 1.0) was a success:
   \item its JSON-based files were on average around 7X more compact than their CityGML-GML equivalents without loss of information. See \citet{19_ogdss_cityjson} and \url{https://www.cityjson.org/filesize/}, and also \citet{Praschl23} for a comparison with standard computer graphics formats; 
   \item it was adopted as an OGC Community Standard~\citep{OGC-CityJSON-v10}; 
   \item it was adopted by the Dutch government as a 3D standard to distribute nation-wide 3D datasets; 
-  \item several implementations, \eg\ FME, were developed.
+  \item several implementations and plugins have been developed, most notably FME\@.
 \end{enumerate}
 
-%@HUGO several implementations or plugins?
+
 
 %
 
@@ -248,11 +248,13 @@ In the context of geo-information, a \emph{stream} is a sequence of data that is
 
 For GML-based formats (which are feature-centric), modifying a file for the purpose of streaming is usually a simple task that involves sending the features in the dataset one-by-one.
 However, notice that this is only true for simple files and GML features stored following the Simple Feature paradigm~\citep{OGC-SF}.
-For more complex data models like CityGML where \emph{Implicit Geometries} and \emph{XLinks} are used (for reusing geometries and for storing some topological relationships), the conversion often needs a large amount of pre-processing.
-The presence of \emph{XLinks} means that references between elements are possible (\eg\ reusing surfaces), but if in the stream the referenced surface has not appeared, the receiver cannot process the information.
-It is not always possible to order CityGML files so that all the references can be resolved without having to store locally information until it appears in the stream.
-It is always possible to resolve the \emph{XLinks} before streaming a dataset, but this means that its size is increased, and that converting back to the original file will not be possible.
-%@HUGO: I don't understand the last 2 sentenses.
+For more complex data models like CityGML where \emph{Implicit Geometries} and \emph{XLinks} are used, the conversion often needs a large amount of pre-processing.
+
+\emph{XLinks} are links links between elements in a file (similar to \emph{pointers} in a computer program), a concrete example in a CityGML file is a cube that lists the geometries of 5 of its surfaces, but its 6th surface is simply a link to another surface somewhere else in the file (which belongs to another building for instance).
+If in the stream the linked surface has not appeared yet, the receiver cannot process the cube and needs to wait for that specific surface to appear.
+It is not always possible to (re-)order a CityGML file so that all the references can be resolved without having to store locally information until it appears in the stream.
+However, it is always possible to resolve the \emph{XLinks} before streaming a dataset, but this means that its size is increased, and that converting back to the original file will not be possible.
+
 
 %
 
@@ -394,8 +396,8 @@ With \emph{cjseq}, we have converted several publicly available files (details o
 
 First observe that---contrary to intuition---the size of a dataset, serialised to a JSON file, stored as a CityJSONSeq is around 12\% more compact than as a CityJSON, and in the case of \textbf{3DBAG} it is 36\% compacter.
 The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0''), and no not increase to several millions.
-%@Hugo: Sentence above not super clear. 
 For instance, the dataset \textbf{Helsinki} contains more than 3 millions vertices, but its largest feature contains only but 2202.
+The fact that many indices are used for geometries (and for textures) means that if large numbers are used then the size of the file will grow.
 As a result, the CityJSONSeq stored in a file is only but 72\% of the original CityJSON file.
 Only one dataset sees its size slightly increased when serialised to a CityJSONSeq file (\textbf{Rotterdam}).
 This is caused, we believe, by the fact that the dataset has textures that are shared by most of the buildings, and the \texttt{"appearance"} property must be repeated for each of the feature (in the CityJSON file it is only stored once and referenced by all buildings).
