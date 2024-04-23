@@ -12,23 +12,25 @@ All data are at: https://surfdrive.surf.nl/files/index.php/s/mmRRDvMwg7UadBY
   - https://data.3dbag.nl/v20240228/tiles/9/284/556/9-284-556.city.json
 
 
+## 3DBV
+
+  - 3D Basivoorziening
+  - https://www.pdok.nl/3D%20Basisvoorziening
+  - tile 37en1_02
+  - Many objects (Building, Water, Terrain) and everything is triangulated
+
 ## Helsinki
 
-https://www.opendata.fi/data/en_GB/dataset/helsingin-3d-kaupunkimalli/resource/577f4286-7162-42e9-8ffe-52632228569e
-
-https://3d.hel.ninja/data/citygml/Helsinki3D_CityGML_BUILDINGS_LOD2_NOTEXTURES_ZIP/
-
-CityGML files merged and converted to CityJSON
-
-textures removed
+  - https://www.opendata.fi/data/en_GB/dataset/helsingin-3d-kaupunkimalli/resource/577f4286-7162-42e9-8ffe-52632228569e
+  - https://3d.hel.ninja/data/citygml/Helsinki3D_CityGML_BUILDINGS_LOD2_NOTEXTURES_ZIP/
+  - CityGML files converted with citygml-tools and merged with cjio
+  - textures removed
 
 ## Helsinki_tex
 
-https://www.opendata.fi/data/en_GB/dataset/helsingin-3d-kaupunkimalli/resource/577f4286-7162-42e9-8ffe-52632228569e
-
-CityGML files merged and converted to CityJSON
-
-textures removed
+  - https://www.opendata.fi/data/en_GB/dataset/helsingin-3d-kaupunkimalli/resource/577f4286-7162-42e9-8ffe-52632228569e
+  - CityGML files converted with citygml-tools and merged with cjio
+  - original textures kept
 
 
 ## Ingolstadt
@@ -51,7 +53,9 @@ textures removed
 
   - https://cityjson.org/datasets/
 
+
 ## Rotterdam
+
 
 
 
