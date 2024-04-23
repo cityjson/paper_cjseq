@@ -358,6 +358,8 @@ It contains two sub-commands:
   \item \texttt{collect}: it reads a CityJSONSeq from \emph{stdin}, collects the features, and outputs a CityJSON file (duplicates vertices are merged).
 \end{enumerate}
 
+It should be observe that the conversion is an efficient process: the rather large dataset (\textbf{Helskinki}, which contains more than \qty{77000} buildings and whose CityJSON file is \qty{572}{\mega\byte}) takes only \qty{4.7}{\sec} to be converted to a CityJSONSeq file, and the reverse operation takes \qty{5.7}{\sec} on a standard laptop.
+
 
 
 %%%
