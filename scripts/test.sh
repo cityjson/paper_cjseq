@@ -2,6 +2,10 @@ printf "==3DBAG\n"
 \time python load_cityjson.py ../data/3DBAG.city.json
 \time python load_cityjsonseq.py ../data/3DBAG.city.jsonl
 
+printf "==3DBV\n"
+\time python load_cityjson.py ../data/3DBV.city.json
+\time python load_cityjsonseq.py ../data/3DBV.city.jsonl
+
 printf "==Helsinki\n"
 \time python load_cityjson.py ../data/Helsinki.city.json
 \time python load_cityjsonseq.py ../data/Helsinki.city.jsonl
