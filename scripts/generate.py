@@ -25,7 +25,12 @@ def gen_vertices(total):
 
 
 def main():
-    number_of_co = 5000000
+    for t in range(3):
+        new_cityjson(random.randint(200, 1000))
+        # new_cityjson(random.randint(800000, 1200000))
+
+def new_cityjson(number_of_co):        
+    # number_of_co = 5000000
     j = {"type": "CityJSON", "version": "2.0", "CityObjects": {}, "transform": {}}
     j["transform"]["scale"] = [0.01, 0.01, 0.01]
     j["transform"]["translate"] = [85000.1, 445006.2, 0.1]
@@ -38,10 +43,9 @@ def main():
         coid = "id_" + str(i)
         j["CityObjects"][coid] = coj
     j["vertices"] = gen_vertices(number_of_co * 8) 
-
     json_str = json.dumps(j, separators=(',',':'))
-    # json_str = json.dumps(j, indent=2)
-    fname = "gen_" + str(int(number_of_co / 1000)) + "k.json"
+
+    fname = "./data/g_" + str(number_of_co) + ".json"
     with open(fname, "w") as foo:
         foo.write(json_str)
 

@@ -404,16 +404,33 @@ With \emph{cjseq}, we have converted several publicly available files (details o
 
 % TODO: setup website for hosting the files
 
-First observe that---contrary to intuition---the size of a dataset serialised as a CityJSONSeq file is around 12\% more compact than serialised as a CityJSON file, and in the case of \textbf{3DBAG} it is 36\% compacter.
+First observe that---contrary to intuition---the size of a dataset serialised as a CityJSONSeq file is around 12\% more compact than serialised as a CityJSON file, and in the case of \textbf{Helsinki} it is 39\% compacter.
 The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0''), and do not increase to several millions.
 For instance, the dataset \textbf{Helsinki} contains a total of more than 3 millions vertices, but its largest feature contains only but 2202 vertices.
 The fact that many indices are used for representing the geometries (and for the textures) means that if several large numbers are used then the size of the file will grow; if they maximum vertex index is around 2000 for each feature, then the file size will be less than the original file.
 
 %
 
-Only one dataset sees its size slightly increased when serialised to a CityJSONSeq file (\textbf{Rotterdam}).
-This is caused, primarily, by the fact that the dataset has textures that are shared by most of the buildings, and the \texttt{"appearance"} property must be repeated for each of the feature (in the CityJSON file it is only stored once and referenced by all buildings).
-If we remove the textures from the CityJSON file it is \qty{2.1}{\mega\byte} and its CityJSONSeq equivalent is \qty{1.3}{\mega\byte} (which means a difference of 62\%)
+Only one dataset sees its size slightly increased when serialised to a CityJSONSeq file: \textbf{Rotterdam}.
+Its CityJSONSeq size is 4\% larger than that of its CityJSON file.
+One reason for this is that the size of the CityJSON file is rather small in the first place, and therefore the indices are not high values.
+Having several features means that many JSON properties must be repeated for each feature, and this can cause the file size to slightly increase.
+
+%
+
+As an experiment, we have created around 125 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube randomly generated; Figure~\ref{fig:synthetic_compression} shows the results.
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figs/synthetic_compression.pdf}
+  \caption{Compression factor of CityJSONSeq for different synthetic datasets containing only but simple cuboid buildings.}%
+\label{fig:synthetic_compression}
+\end{figure}
+Notice that as the filesize grows, the compression factor ($\frac{size(CityJSON) - size(CityJSONSeq)}{CityJSON}$) grows.
+The smallest file contains only but 526 buildings and its compression factor is -2\%, while the largest file has \num{3960105} buildings, and a compression factor of 18\%.
+
+%
+
+% We can expect
 
 
 %%%
