@@ -457,7 +457,7 @@ The results for both the maximum memory footprint\footnote{The resident set size
 The scripts are available at \url{https://github.com/cityjson/paper_cjseq/tree/main/scripts/}.
 \begin{table*}
   \centering
-  \caption{Comparison of the processing time and max RAM use for processing the same data stored in a CityJSON file and a CityJSONSeq file.}
+  \caption{Comparison of the processing time and maximum RAM use for processing CityJSON and CityJSONSeq files.}
   \small
   \begin{tabular}
     {@{}lcrrcrrr@{}}\toprule
@@ -481,7 +481,11 @@ The scripts are available at \url{https://github.com/cityjson/paper_cjseq/tree/m
   \label{tab:ramtime}
 \end{table*}
 
-The results indicate that there is a very significant benefit to using CityJSONSeq over CityJSON, at least for operations that do not require analysing or processing city objects that are close to each other.
+Notice that the dataset \textbf{3DBV} contains the ground that has been triangulated, and a few large areas are stored as \texttt{LandUse} and contain several triangles, this is the reason why the maximum memory use is larger than for other datasets. 
+
+%
+
+The results in Table~\ref{tab:ramtime} indicate that there is a very significant benefit to using CityJSONSeq over CityJSON, at least for operations that do not require analysing or processing city objects that are close to each other.
 Operations like calculating volumes, merging and subsetting files, finding city objects with specific attributes, etc.\ will all use significantly less memory and will be significantly faster.
 
 
