@@ -13,7 +13,7 @@
 
 % //-- HL:
 \usepackage{booktabs}
-% \usepackage{flushend}
+\usepackage{flushend}
 \usepackage{siunitx}
 \usepackage{threeparttable}
 \usepackage{url}
@@ -350,15 +350,16 @@ The CityJSONSeq for Figure~\ref{fig:cjseq_idea} is shown in Figure~\ref{fig:stre
 \label{sec:experiments}
 
 
-To convert efficiently between CityJSON and CityJSONSeq files (and vice-versa), we have developed the open-source software \emph{cjseq}, freely available at \url{https://github.com/cityjson/cjseq/}.
-The program takes care of not only the geometries, but also of the materials, textures, and geometry templates that the dataset could contain.
-It contains two sub-commands: 
+To convert efficiently between CityJSON and CityJSONSeq files (and vice-versa), we have developed the open-source software \emph{cjseq}, available at \url{https://github.com/cityjson/cjseq/} under a permissive open-source license.
+The command-line program takes care of converting not only the geometries, but also of the materials, textures, and geometry templates that the dataset could contain.
+It contains three sub-commands: 
 \begin{enumerate}
-  \item \texttt{cat}: based on a CityJSON file, it outputs a CityJSONSeq;
-  \item \texttt{collect}: it reads a CityJSONSeq from \emph{stdin}, collects the features, and outputs a CityJSON file (duplicates vertices are merged).
+  \item \texttt{cat}: CityJSON $\rightarrow$ CityJSONSeq;
+  \item \texttt{collect}: CityJSONSeq $\rightarrow$ CityJSON;
+  \item \texttt{filter}: to filter city objects in a CityJSONSeq, randomly or based on a bounding box.
 \end{enumerate}
 
-It should be observe that the conversion is an efficient process: the rather large dataset (\textbf{Helskinki}, which contains more than \qty{77000} buildings and whose CityJSON file is \qty{572}{\mega\byte}) takes only \qty{4.7}{\sec} to be converted to a CityJSONSeq file, and the reverse operation takes \qty{5.7}{\sec} on a standard laptop.
+It should be observe that the conversion is an efficient process: the rather large dataset (\textbf{Helskinki}, which contains more than \qty{77000} buildings and whose CityJSON file is \qty{572}{\mega\byte}), takes only \qty{4.7}{\sec} to be converted to a CityJSONSeq file, and the reverse operation takes \qty{5.7}{\sec} (on a standard laptop).
 
 
 
@@ -379,7 +380,7 @@ It should be observe that the conversion is an efficient process: the rather lar
     \midrule
     \textbf{3DBAG}          && \qty{1110} bldgs    &         && \qty{6.7}{\mega\byte} & \qty{5.9}{\mega\byte} & 14\%  &&     \num{82509} &    \num{4112} &  0.1\% \\
     \textbf{3DBV}           && \qty{71634} diff    &         && \qty{378}{\mega\byte} & \qty{317}{\mega\byte} & 19\%  &&   \num{4110319} &  \num{116670} & 21.0\% \\
-    \textbf{Helsinki}       && \qty{77231} bldgs   &         && \qty{572}{\mega\byte} & \qty{412}{\mega\byte} & 39\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
+    \textbf{Helsinki}       && \qty{77231} bldgs   &         && \qty{572}{\mega\byte} & \qty{412}{\mega\byte} & 28\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
     \textbf{Helsinki\_tex}  && \qty{77231} bldgs   & tex     && \qty{713}{\mega\byte} & \qty{644}{\mega\byte} & 11\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
     \textbf{Ingolstadt}     && \qty{55} bldgs      &         && \qty{4.8}{\mega\byte} & \qty{3.8}{\mega\byte} & 26\%  &&     \num{87972} &   \num{12800} &  0.0\% \\
     \textbf{Montréal}       && \qty{294} bldgs     & tex     && \qty{5.4}{\mega\byte} & \qty{4.6}{\mega\byte} & 17\%  &&     \num{31585} &    \num{3393} &  2.0\% \\
@@ -400,12 +401,13 @@ It should be observe that the conversion is an efficient process: the rather lar
   \end{threeparttable}
 \end{table*}
 
-With \emph{cjseq}, we have converted several publicly available files (details of files at \url{https://github.com/cityjson/paper_cjseq/tree/main/data}), and Table~\ref{tab:stats} shows an overview of the files stored both in CityJSON and CityJSONSeq.
+With \emph{cjseq}, we have converted several publicly available files, and Table~\ref{tab:datasets} shows an overview of the files stored both in CityJSON and CityJSONSeq.
+The files themselves and their details are available at \url{https://github.com/cityjson/paper_cjseq/tree/main/data}.
 
-% TODO: setup website for hosting the files
+%
 
-First observe that---contrary to intuition---the size of a dataset serialised as a CityJSONSeq file is around 12\% more compact than serialised as a CityJSON file, and in the case of \textbf{Helsinki} it is 39\% compacter.
-The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0''), and do not increase to several millions.
+First observe that---contrary to intuition---the size of a dataset serialised as a CityJSONSeq file is around 12\% more compact than serialised as a CityJSON file, and in the case of \textbf{Helsinki} it is 28\% compacter.
+The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0''), and do not increase to very large integers.
 For instance, the dataset \textbf{Helsinki} contains a total of more than 3 millions vertices, but its largest feature contains only but 2202 vertices.
 The fact that many indices are used for representing the geometries (and for the textures) means that if several large numbers are used then the size of the file will grow; if they maximum vertex index is around 2000 for each feature, then the file size will be less than the original file.
 
@@ -418,19 +420,20 @@ Having several features means that many JSON properties must be repeated for eac
 
 %
 
-As an experiment, we have created around 125 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube randomly generated; Figure~\ref{fig:synthetic_compression} shows the results.
+As an experiment, we have created around 125 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube randomly generated.
+There are no attributes, no semantics, no textures/materials. 
+Figure~\ref{fig:synthetic_compression} shows that, as the CityJSON filesize increases, the compression factor increases.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{figs/synthetic_compression.pdf}
-  \caption{Compression factor of CityJSONSeq for different synthetic datasets containing only but simple cuboid buildings.}%
+  \caption{Compression factor of CityJSONSeq for different synthetic datasets containing only but simple cuboid buildings. ($\frac{size(CityJSON) - size(CityJSONSeq)}{CityJSON}$)}%
 \label{fig:synthetic_compression}
 \end{figure}
-Notice that as the filesize grows, the compression factor ($\frac{size(CityJSON) - size(CityJSONSeq)}{CityJSON}$) grows.
-The smallest file contains only but 526 buildings and its compression factor is -2\%, while the largest file has \num{3960105} buildings, and a compression factor of 18\%.
+The smallest file contains only 526 buildings and its compression factor is -2\% (thus CityJSONSeq has a larger filesize than that of CityJSON), while the largest file has \num{3960105} buildings, and a compression factor of 18\%.
 
 %
 
-% We can expect
+% TODO: not sure the shared vertices has a huge impact to be honest.
 
 
 %%%
@@ -439,18 +442,18 @@ The smallest file contains only but 526 buildings and its compression factor is 
 We compare the speed and memory footprint of accessing each city object in a dataset.
 This operation is common in applications that manipulate city models.
 
-When a city model is stored in its entirety in one CityJSON object, we need to load the whole CityJSON object into memory in order to access the \texttt{"transform"} and \texttt{"vertices"} properties for instance.
+When a city model is stored in its entirety in one CityJSON object, we need to deserialise the whole CityJSON object into memory in order to access the \texttt{"transform"} and \texttt{"vertices"} properties for instance.
 
-With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one.
+With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one (and thus never have in memory more than the city object itself and the metadata information).
 As shown in the experiments below, this allows for very efficient operations in terms of both CPU and memory usage.
-Operations that would highly benefit from this are subsetting and merging a citymodel.
+Operations that would highly benefit from this are subsetting and merging a 3D city model.
 Operations like modifying the CRS or updating the metadata would not even require to loop through the features, just to alter the first object in the file.
 
 %
 
-We have processed all the datasets from Table~\ref{tab:datasets} with two simple Python scripts that loop through the city objects and their geometries, and increment a global counter for the geometry type (\texttt{Solid} or \texttt{MultiSurface}).
+We have processed all the datasets from Table~\ref{tab:datasets} with two simple Python scripts that iterate through the city objects and their geometries, and increment a global counter for the geometry type (\texttt{Solid} or \texttt{MultiSurface}) and report it at the end.
 This is just an example of a simple local operation, any other operation such as calculating the area of the façades or counting the number of windows could have been performed.
-The results for both the maximum memory footprint\footnote{The resident set size (RSS) was used, which is the portion of main memory occupied by the Python script.} and the time used are shown in Table~\ref{tab:ramtime}.
+The results for both the maximum memory footprint\footnote{The resident set size (RSS) was used, which is the portion of main memory occupied by the Python script} and the time used are shown in Table~\ref{tab:ramtime}.
 The scripts are available at \url{https://github.com/cityjson/paper_cjseq/tree/main/scripts/}.
 \begin{table*}
   \centering
@@ -478,7 +481,7 @@ The scripts are available at \url{https://github.com/cityjson/paper_cjseq/tree/m
   \label{tab:ramtime}
 \end{table*}
 
-The results indicate that there is a very significant benefit to using CityJSONSeq, compared to regular CityJSON files, at least for operations that do not require analysing or processing city objects that are close to each other.
+The results indicate that there is a very significant benefit to using CityJSONSeq over CityJSON, at least for operations that do not require analysing or processing city objects that are close to each other.
 Operations like calculating volumes, merging and subsetting files, finding city objects with specific attributes, etc.\ will all use significantly less memory and will be significantly faster.
 
 
