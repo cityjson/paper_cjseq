@@ -416,7 +416,7 @@ Figure~\ref{fig:synthetic_compression} shows that, as the CityJSON filesize incr
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{figs/synthetic_compression.pdf}
-  \caption{Compression factor of CityJSONSeq files for different synthetic datasets containing only but simple cuboid buildings. ($\frac{size(CityJSON) - size(CityJSONSeq)}{size(CityJSON)}$)}%
+  \caption{Compression factor of CityJSONSeq files for different synthetic datasets containing only but simple cuboid buildings.}%
 \label{fig:synthetic_compression}
 \end{figure}
 The smallest file contains only 526 buildings and its compression factor is -2\% (thus CityJSONSeq has a larger filesize than that of CityJSON), while the largest file has \num{3960105} buildings, and a compression factor of 18\%.
@@ -526,7 +526,7 @@ We have already added support for it in a few of the open-source CityJSON tools 
 %   \item  Appearances (esp. Material) are relatively heavy objects with many properties. If an appearance is shared across most CityObjects, duplicating it in each Feature could negate the effect of small vertex indices and actually increase the filesize compared to a regular CityJSON file. This is just theorizing, haven't tested.
 % \end{itemize}
 
-
+\newpage
 {
 	\begin{spacing}{1.17}
 		\normalsize
