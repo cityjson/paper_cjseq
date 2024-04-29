@@ -70,25 +70,13 @@
 
 % KAO: Remove extra spacing
 \author{
- Hugo Ledoux\textsuperscript{1}, Gina Stavropoulou\textsuperscript{1}, Balázs Dukai\textsuperscript{2}}
+ Hugo Ledoux\textsuperscript{1}\thanks{corresponding author}, Gina Stavropoulou\textsuperscript{1}, Balázs Dukai\textsuperscript{2}}
 
 % KAO: Remove extra newline
 \address{
 	\textsuperscript{1 }Delft University of Technology, the Netherlands---\texttt{[h.ledoux, g.stavropoulou]@tudelft.nl}\\
 	\textsuperscript{2 }3DGI, the Netherlands---\texttt{balazs.dukai@3dgi.nl}\\
 }
-
-% If the corresponding author is NOT the final author, always add a % space before the subsequent comma, i.e.
-% first author name\textsuperscript{a,}\thanks{Corresponding author} , % second author name \textsuperscript{b}, etc.
-% thanks to Niclas Borlin 05-05-2016
-% information on the corresponding author should not be used any longer and has been commented out
-% C. Heipke, Jan 03,2024
-
-% the use of the information of commissions and working groups should not be used any longer and has been commented out
-% C. Heipke, Sept. 20,2022
-%\commission{XX, }{YY} %This field is optional. If filled, XX and YY should be replaced by adequate numbers. See https://www2.isprs.org/commissions/
-%\workinggroup{XX/YY} %This field is optional.
-%\icwg{}   %This field is optional.
 
 \abstract{
 % The abstract must have the following structure: 
@@ -499,32 +487,15 @@ While CityJSONSeq was developed mostly for streaming large 3D city datasets, the
 From a practitioners point-of-view, we should stress that CityJSONSeq can easily be processed with \emph{Unix pipes} (also called \emph{pipelines}).
 Pipelines allow us to chain several processes together, the output of a process becomes the input of the next one, and so on. 
 Given 2 processes, the 2nd one can usually start before the 1st one has finished processing all the data.
-This means in practice that the processing of a dataset can be performed by writing several programs that perform only small/atomic tasks; this makes the development and maintenance of code simpler.
-Moreover, it allows us to develop the different programs in different languages. 
-The pipeline used for preparing the datasets for this paper was actually a mix of Python (the program `cjio' and `cjdb') and Rust (`cjseq'), and another program written in C++ could easy be added.
+This means that, in practice, the processing of a dataset can be performed by writing several programs that perform a few small/atomic tasks; this makes the development and maintenance of code simpler.
+Moreover, it allows us to write the code in different languages. 
+The pipeline used for preparing the datasets used in this paper was actually a mix of Python (the program `cjio' and `cjdb') and Rust (`cjseq'), and another program written in C++ could easy be added.
 
 %
 
 Finally, because the structure of CityJSONSeq is nearly the same as that of CityJSON, in practice adding support for CityJSONSeq requires a minimum amount of effort since most of the code already existing can be reused. 
 We have already added support for it in a few of the open-source CityJSON tools (see \url{https://www.cityjson.org/software/}) and we will continue in the future.
 
-% We developed CityJSONSeq mainly because we wanted to be able to stream large CityJSON files from a server.
-
-% \begin{itemize}
-%   % \item We have kept most of the structure of CityJSON so that parsers do not need to be adapted much.
-%   % \item CityJSONSeq is an attractive alternative to CityJSON, in most uses it is better to use since it is compacter, processing it uses less memory and is faster.
-%   \item it opens up many possibilities for processing large 3dcm by using Unix pipes. A few of the tools developed for CityJSON are already reading/writing to stdin/stdout, so they can be chained together.
-%   \item cjseqview, cjseqval are two of them, but developing others to eg filter, calculate volumes or repair geometries would be trivial
-%   \item the nice part is that the tools do not need to be written in the same language, one pipeline can have tools built in Python and Rust and C++ and it all works nicely.
-%   \item extensions: these should be placed in the metadata or collection
-% \end{itemize}
-
-% Disadvantages:
-% \begin{itemize}
-%   \item  Software implementing CityJSON need to account for both regular CityJSON and CityJSONSeq.
-%   \item  In case of many, small, interconnecting CityObjects, a global vertex list would provide better compression than the separate vertex lists of the CityJSONFeatures.
-%   \item  Appearances (esp. Material) are relatively heavy objects with many properties. If an appearance is shared across most CityObjects, duplicating it in each Feature could negate the effect of small vertex indices and actually increase the filesize compared to a regular CityJSON file. This is just theorizing, haven't tested.
-% \end{itemize}
 
 \newpage
 {
