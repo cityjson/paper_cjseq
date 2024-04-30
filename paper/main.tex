@@ -356,22 +356,22 @@ It should be observed that the conversion is an efficient process: the rather la
   \label{tab:datasets}
   \small
   \begin{tabular}
-    {@{}lcccccrrrcrrr@{}}\toprule
-    &&  \multicolumn{2}{c}{\textbf{dataset}} && \multicolumn{3}{c}{\textbf{size of file}} && \multicolumn{3}{c}{\textbf{vertices}}   \\ 
-    \cmidrule{3-4} \cmidrule{6-8} \cmidrule{10-12} 
-     && CityObjects &  app.\footnotesize ${}^{\text{(a)}}$ && CityJSON & CityJSONSeq & compr.\footnotesize ${}^{\text{(b)}}$ && total & largest\footnotesize ${}^{\text{(c)}}$ & shared\footnotesize ${}^{\text{(d)}}$ \\
+    {@{}lcccccrrrcrr@{}}\toprule
+    &&  \multicolumn{2}{c}{\textbf{dataset}} && \multicolumn{3}{c}{\textbf{size of file}} && \multicolumn{2}{c}{\textbf{vertices}}   \\ 
+    \cmidrule{3-4} \cmidrule{6-8} \cmidrule{10-11} 
+     && CityObjects &  app.\footnotesize ${}^{\text{(a)}}$ && CityJSON & CityJSONSeq & compr.\footnotesize ${}^{\text{(b)}}$ && total & largest\footnotesize ${}^{\text{(c)}}$ \\
     \midrule
-    \textbf{3DBAG}          && \qty{1110} bldgs    &         && \qty{6.7}{\mega\byte} & \qty{5.9}{\mega\byte} & 12\%  &&     \num{82509} &    \num{4112} &  0.1\% \\
-    \textbf{3DBV}           && \qty{71634} diff    &         && \qty{378}{\mega\byte} & \qty{317}{\mega\byte} & 16\%  &&   \num{4110319} &  \num{116670} & 21.0\% \\
-    \textbf{Helsinki}       && \qty{77231} bldgs   &         && \qty{572}{\mega\byte} & \qty{412}{\mega\byte} & 28\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
-    \textbf{Helsinki\_tex}  && \qty{77231} bldgs   & tex     && \qty{713}{\mega\byte} & \qty{644}{\mega\byte} & 10\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
-    \textbf{Ingolstadt}     && \qty{55} bldgs      &         && \qty{4.8}{\mega\byte} & \qty{3.8}{\mega\byte} & 25\%  &&     \num{87972} &   \num{12800} &  0.0\% \\
-    \textbf{Montréal}       && \qty{294} bldgs     & tex     && \qty{5.4}{\mega\byte} & \qty{4.6}{\mega\byte} & 15\%  &&     \num{31585} &    \num{3393} &  2.0\% \\
-    \textbf{NYC}            && \qty{23777} bldgs   &         && \qty{105}{\mega\byte} &  \qty{95}{\mega\byte} & 10\%  &&   \num{1035804} &    \num{2608} &  0.8\% \\
-    \textbf{Railway}        && \qty{50} diff       & tex+mat && \qty{4.3}{\mega\byte} & \qty{4.0}{\mega\byte} &  8\%  &&     \num{73554} &   \num{14966} &  0.4\% \\
-    \textbf{Rotterdam}      && \qty{853} bldgs     & tex     && \qty{2.6}{\mega\byte} & \qty{2.7}{\mega\byte} & -4\%  &&     \num{22246} &     \num{631} & 20.0\% \\
-    \textbf{Vienna}         && \qty{307} bldgs     &         && \qty{5.4}{\mega\byte} & \qty{4.8}{\mega\byte} & 11\%  &&     \num{47220} &    \num{2025} &  0.0\% \\
-    \textbf{Zürich}         && \qty{52834} bldgs   &         && \qty{279}{\mega\byte} & \qty{247}{\mega\byte} & 11\%  &&   \num{3472989} &    \num{4069} &  2.6\% \\
+    \textbf{3DBAG}          && \qty{1110} bldgs    &         && \qty{6.7}{\mega\byte} & \qty{5.9}{\mega\byte} & 12\%  &&     \num{82509} &    \num{4112} \\
+    \textbf{3DBV}           && \qty{71634} diff    &         && \qty{378}{\mega\byte} & \qty{317}{\mega\byte} & 16\%  &&   \num{4110319} &  \num{116670} \\
+    \textbf{Helsinki}       && \qty{77231} bldgs   &         && \qty{572}{\mega\byte} & \qty{412}{\mega\byte} & 28\%  &&   \num{3038576} &    \num{2202} \\
+    \textbf{Helsinki\_tex}  && \qty{77231} bldgs   & tex     && \qty{713}{\mega\byte} & \qty{644}{\mega\byte} & 10\%  &&   \num{3038576} &    \num{2202} \\
+    \textbf{Ingolstadt}     && \qty{55} bldgs      &         && \qty{4.8}{\mega\byte} & \qty{3.8}{\mega\byte} & 25\%  &&     \num{87972} &   \num{12800} \\
+    \textbf{Montréal}       && \qty{294} bldgs     & tex     && \qty{5.4}{\mega\byte} & \qty{4.6}{\mega\byte} & 15\%  &&     \num{31585} &    \num{3393} \\
+    \textbf{NYC}            && \qty{23777} bldgs   &         && \qty{105}{\mega\byte} &  \qty{95}{\mega\byte} & 10\%  &&   \num{1035804} &    \num{2608} \\
+    \textbf{Railway}        && \qty{50} diff       & tex+mat && \qty{4.3}{\mega\byte} & \qty{4.0}{\mega\byte} &  8\%  &&     \num{73554} &   \num{14966} \\
+    \textbf{Rotterdam}      && \qty{853} bldgs     & tex     && \qty{2.6}{\mega\byte} & \qty{2.7}{\mega\byte} & -4\%  &&     \num{22246} &     \num{631} \\
+    \textbf{Vienna}         && \qty{307} bldgs     &         && \qty{5.4}{\mega\byte} & \qty{4.8}{\mega\byte} & 11\%  &&     \num{47220} &    \num{2025} \\
+    \textbf{Zürich}         && \qty{52834} bldgs   &         && \qty{279}{\mega\byte} & \qty{247}{\mega\byte} & 11\%  &&   \num{3472989} &    \num{4069} \\
     \bottomrule
   \end{tabular}
     \begin{tablenotes}[flushleft]
@@ -379,7 +379,6 @@ It should be observed that the conversion is an efficient process: the rather la
       \item ${}^{\text{(a)}}$ appearance: `tex' is textures stored; `mat' is material stored
       \item ${}^{\text{(b)}}$ compression factor is $\frac{size(CityJSON) - size(CityJSONSeq)}{size(CityJSON)}$
       \item ${}^{\text{(c)}}$ number of vertices in the largest feature of the stream
-      \item ${}^{\text{(d)}}$ percentage of vertices that are used to represent different city objects (\eg\ the vertices of a wall shared by two buildings)
     \end{tablenotes}
   \end{threeparttable}
 \end{table*}
@@ -400,14 +399,33 @@ Only one dataset sees its size slightly increase by 4\% when serialised to a Cit
 One reason for this is that the size of the CityJSON file is rather small in the first place, and therefore the indices are not high values.
 As an experiment, we have created around 125 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube randomly generated.
 There are no attributes, no semantics, no textures/materials. 
-Figure~\ref{fig:synthetic_compression} shows that, as the CityJSON filesize increases, the compression factor increases.
+Figure~\ref{fig:compression_random} shows that, as the CityJSON filesize increases, the compression factor increases.
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{figs/synthetic_compression.pdf}
+  \includegraphics[width=\linewidth]{figs/compression_random.pdf}
   \caption{Compression factor of CityJSONSeq files for different synthetic datasets containing only but simple cuboid buildings.}%
-\label{fig:synthetic_compression}
+\label{fig:compression_random}
 \end{figure}
-The smallest file contains only 526 buildings and its compression factor is -2\% (thus CityJSONSeq has a larger filesize than that of CityJSON), while the largest file has \num{3960105} buildings, and a compression factor of 18\%.
+The smallest file contains only 526 buildings and its compression factor is -2\% (thus CityJSONSeq has a larger filesize than that of CityJSON), while the largest file has \num{3960105} buildings, and a compression factor of more than 12\%.
+
+%
+
+The number of shared vertices between different city objects also influences the compression factor. 
+Shared vertices are those that represent walls incident to two adjacent buildings.
+In CityJSON they are conceptually the same vertices and each of the surfaces refer to them, but in CityJSONSeq they have to be listed separately in each of the buildings.
+It should be said that most of the datasets have very few vertices that are shared (most have less than 2\%).
+To understand the correlation between the compression factor of CityJSONSeq and the percentage of shared vertices in a datasets, we have generated several datasets also containing cuboid buildings. 
+However, the distribution of the buildings is not random: we enforced that several buildings are adjacent to others (so that they share vertices with other buildings).
+The relationship between the compression and the percentage of shared vertices can be seen in Figure~\ref{fig:compression_adjacent} for around 100 datasets containing exactly \num{1000000} buildings.
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figs/compression_adjacent.pdf}
+  \caption{Compression factor of CityJSONSeq files with respect to the percentage of shared vertices in a dataset that was synthetically generated.}% 
+\label{fig:compression_adjacent}
+\end{figure}
+If the number of shared vertices is 0\%, this means that we have \num{1000000} buildings that are disconnected; in this case we obtain a compression factor of around 8\%.
+If all the buildings are adjacent to another one (shared vertices are nearly 100\%), then we can see that the compression factor is nearly -10\% (which means that the size of the CityJSONSeq file is larger than that of the CityJSON file).
+
 
 %
 
@@ -497,7 +515,7 @@ Finally, because the structure of CityJSONSeq is nearly the same as that of City
 We have already added support for it in a few of the open-source CityJSON tools (see \url{https://www.cityjson.org/software/}) and we will continue in the future.
 
 
-\newpage
+% \newpage
 {
 	\begin{spacing}{1.17}
 		\normalsize
