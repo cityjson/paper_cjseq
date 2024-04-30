@@ -44,7 +44,7 @@ def main():
     
 
 def new_cityjson_group(number_of_co):        
-    offsets = [random.randint(0,1000), random.randint(0,1000), random.randint(0,1000)]
+    offsets = [random.randint(0,10000), random.randint(0,10000), random.randint(0,10000)]
     for i in range(number_of_co):
         j = {"type": "CityJSONFeature", "CityObjects": {}, "vertices": []}
         cgeom = gen_onecube()

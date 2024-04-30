@@ -10,23 +10,22 @@ import pandas as pd
 
 
 
-#-- 1. convert CityJSON => CityJSONSeq
-# fs = glob.glob('*.json')
+# #-- 1. convert CityJSON => CityJSONSeq
+# fs = glob.glob('./data_random/*.json')
 # for each in fs:
-#     # cjseq cat -f out.json > out.jsonl
 #     cmd = "cjseq cat -f {} > {}l".format(each, each)
 #     print(cmd)
 #     os.system(cmd)
 
 
 #-- 2. sizes
-fs = glob.glob('/Users/hugo/data/cityjson/CityJSONSeq-demo-files/generated/data/*.json')
+fs = glob.glob('./data_random/*.json')
 nocubes = []
 scj = []
 scjseq = []
 for f in fs:
-    # print(f)
-    nocubes.append(int(f[f.find("_")+1:f.rfind(".")]))
+    print(f)
+    nocubes.append(int(f[f.find("g_")+2:f.rfind(".")]))
     scj.append(os.path.getsize(f) /1024/1024)
     fl = f + "l"
     scjseq.append(os.path.getsize(fl)/1024/1024)
@@ -44,13 +43,13 @@ compr = (df[1] - df[2]) / df[1]
 #-- 3. plot
 fig, ax = plt.subplots()
 ax.plot(df[0], compr)
+# ax.plot(df[0], compr, marker=".")
 # ax.plot(z[:,0], compr)
-# ax.plot(z[:,0], compr, marker=".")
 
-ax.set(xlabel='Number of Buildings', ylabel='file compression')
+ax.set(xlabel='Number of buildings', ylabel='file compression')
 # ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%.0f'))
 
 # ax.set_xlim(-1, 100000)
 # ax.set_ylim(0.8, 1.01)
-fig.savefig("synthetic_compression.pdf")
+fig.savefig("compression_random.pdf")
 plt.show()

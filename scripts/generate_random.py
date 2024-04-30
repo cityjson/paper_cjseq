@@ -1,5 +1,6 @@
 import json
 import sys
+import uuid
 import random
 
 
@@ -25,8 +26,9 @@ def gen_vertices(total):
 
 
 def main():
-    for t in range(3):
-        new_cityjson(random.randint(200, 1000))
+    for t in range(4):
+        # new_cityjson(1000000)
+        new_cityjson(random.randint(3200000, 4000000))
         # new_cityjson(random.randint(800000, 1200000))
 
 def new_cityjson(number_of_co):        
@@ -40,12 +42,12 @@ def new_cityjson(number_of_co):
         offset += 8
         coj = {"type": "Building", "geometry": []}
         coj["geometry"].append(cgeom)
-        coid = "id_" + str(i)
+        coid = str(uuid.uuid4())
         j["CityObjects"][coid] = coj
     j["vertices"] = gen_vertices(number_of_co * 8) 
     json_str = json.dumps(j, separators=(',',':'))
 
-    fname = "./data/g_" + str(number_of_co) + ".json"
+    fname = "./data_random/g_" + str(number_of_co) + ".json"
     with open(fname, "w") as foo:
         foo.write(json_str)
 

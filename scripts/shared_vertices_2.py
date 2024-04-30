@@ -5,8 +5,14 @@ from pathlib import Path
 import sys
 import csv
 import glob
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import matplotlib
 
-fs = glob.glob('/Users/hugo/data/cityjson/CityJSONSeq-demo-files/*.json')
+fs = glob.glob('./data/*.json')
+
+fout = open("shared.csv", 'w')
+fout.write("group,percentage")
 
 for each in fs:
     #-- json
@@ -22,7 +28,9 @@ for each in fs:
         j2 = json.loads(line)
         v_jsonl += len(j2["vertices"]) 
 
-    print(each, v_jsonl / v_json)
+    print(each, (v_jsonl - v_json) / v_json)
+    fout.write("{},{}\n".format(each, (v_jsonl - v_json) / v_json))
+
 
 
 

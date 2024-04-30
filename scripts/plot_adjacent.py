@@ -30,7 +30,7 @@ groups = []
 scj = []
 scjseq = []
 for f in fs:
-    # print(f)
+    print(f)
     groups.append(int(f[f.rfind("/")+1:f.rfind(".")]))
     scj.append(os.path.getsize(f) /1024/1024)
     fl = f + "l"
@@ -63,5 +63,5 @@ ax.set(xlabel='% shared vertices', ylabel='compression factor')
 
 # ax.set_xlim(-1, 100000)
 # ax.set_ylim(0.8, 1.01)
-# fig.savefig("synthetic_compression.pdf")
+fig.savefig("compression_adjacent.pdf")
 plt.show()

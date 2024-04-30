@@ -4,7 +4,7 @@ import os
 import glob
 
 
-fs = glob.glob('../data/*.jsonl')
+fs = glob.glob('./data/*.jsonl')
 
 # print(fs)
 # sys.exit()
