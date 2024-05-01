@@ -91,14 +91,14 @@
 % \end{enumerate}
 % Abstracts must contain the title, the author(s) names incl. affiliations, the keywords and a summary of the contribution (research question, relevance, solution, evaluation).
 
-We present \emph{CityJSON Text Sequences} (CityJSONSeq), a format based on \emph{JSON Text Sequences} and CityJSON\@. 
-CityJSONSeq was added to the CityJSON version 2.0 standard that was recently released, and it allows us to stream very large 3D city models.
+We present \emph{CityJSON Text Sequences} (CityJSONSeq in short), a format based on \emph{JSON Text Sequences} and CityJSON\@. 
+CityJSONSeq was added to the CityJSON version 2.0 standard to allow us to stream very large 3D city models.
 The main idea is to decompose a CityJSON dataset into its individual city objects (eg each building, each tree, etc.) and create several independent JSON objects of a newly defined type: \texttt{CityJSONFeature}.
 We elaborate on the engineering decisions that were taken to develop CityJSONSeq, we present the open-source software we have developed to convert to and from CityJSONSeq, and we discuss different aspects of the new format, \eg\ filesize, usability, memory footprint, etc.
 For several use-cases, we consider CityJSONSeq to be a better format than CityJSON because: (1) once serialised it is about 10\% more compact; (2) it takes an order of magnitude less time to process; and (3) it uses significantly less memory.
 }
 
-\keywords{3D city modelling, CityJSON, CityGML, streaming}
+\keywords{3D city modelling, CityJSON, streaming, massive datasets, CityGML}
 \maketitle
 %\saythanks % added 28-02-2014 Markus Englich
 
@@ -111,11 +111,11 @@ For several use-cases, we consider CityJSONSeq to be a better format than CityJS
 \section{Introduction}%
 \label{sec:intro}
  
-CityJSON is a JSON-based encoding for storing 3D city models that implements a subset of version 3.0 of the CityGML data model~\citep{OGC-CityGML3}.
+CityJSON is a JSON-based encoding for storing 3D city models that implements a subset of the CityGML data model version 3.0~\citep{OGC-CityGML3}.
 As further described in \citet{19_ogdss_cityjson}, its development started in 2017 with the aim of offering an easy-to-use and web-ready alternative to the XML-encoded CityGML files~\citep{OGC-CityGML3-XML}, which in practice can be rather verbose, difficult to parse, and complex to manipulate.
 The first official release of CityJSON (version 1.0) was a success: 
 \begin{enumerate}
-  \item its JSON-based files were on average around 7X more compact than their CityGML-XML equivalents without loss of information. See \citet{19_ogdss_cityjson} and \url{https://www.cityjson.org/filesize/} for details, and also \citet{Praschl23} for a comparison with standard computer graphics formats; 
+  \item its JSON-based files were on average around 7 times more compact than their CityGML-XML equivalents without loss of information. See \citet{19_ogdss_cityjson} and \url{https://www.cityjson.org/filesize/} for details, and also \citet{Praschl23} for a comparison with standard computer graphics formats; 
   \item it was adopted as an OGC Community Standard~\citep{OGC-CityJSON-v10}; 
   \item it was adopted by the Dutch government as a 3D standard to distribute nationwide 3D datasets; 
   \item several implementations and plugins have been developed, most notably FME\@.
@@ -126,8 +126,8 @@ The first official release of CityJSON (version 1.0) was a success:
 %
 
 However, the version 1.0 of CityJSON had one limitation: its structure for storing the coordinates of the geometries made the \emph{streaming} of very large datasets complex, if not impossible (see Figure~\ref{fig:cj_idea}).
-Since datasets of cities are progressively becoming larger (it is not uncommon to have CityGML-XML files of over 2GB), the large data volume can hinder the processing of CityJSON files.
 As further defined in Section~\ref{sec:streaming}, streaming refers to the possibility of downloading/transferring/processing a dataset without having to load it all in memory.
+Since datasets of 3D cities are nowadays very large (it is not uncommon to have CityGML-XML files over 2GB), the processing CityJSON files is an issue in practice.
 
 %
 
@@ -135,17 +135,17 @@ We present in this paper \emph{CityJSON Text Sequences} (\emph{CityJSONSeq} in s
 CityJSONSeq was added to the CityJSON version 2.0 standard that was released in 2023 (and also standardised by the OGC, see \citet{OGC-CityJSON-v20}).
 As further described in Section~\ref{sec:cityjsonseq}, the idea is to decompose a (often large) CityJSON file into its individual \emph{features} (\eg\ each \texttt{Building}, each \texttt{Bridge}, etc.) and create several JSON objects of a newly defined type \texttt{CityJSONFeature}.
 These objects are either serialised into a text file, or streamed from a server to client or from one application to another.
-This allows us to avoid a long list of vertices that need to be indexed, as it is the case with CityJSON files (see Section~\ref{sec:cityjson} for details).
+This allows us to avoid a large list of vertices that need to be indexed, as it is the case with CityJSON files (see Section~\ref{sec:cityjson} for details).
 \begin{figure}
   \centering
-  \includegraphics[width=0.95\linewidth]{figs/cj_idea}
+  \includegraphics[width=\linewidth]{figs/cj_idea}
   \caption{An example of a CityJSON file. The vertices are stored in a global list, and the position of the vertices in that list are used to represent the boundaries of the geometries (represented by the arrows, many have been left out for clarity).}%
 \label{fig:cj_idea}
 \end{figure}
 
 %
 
-We have implemented and released an open-source software to convert between CityJSON and CityJSONSeq objects; we describe it in Section~\ref{sec:experiments}.
+In Section~\ref{sec:experiments}, we describe  the open-source software we have developed to convert between CityJSON and CityJSONSeq files.
 We also analyse the size of CityJSONSeq files versus CityJSON files, and that for several real-world datasets.
 It can be observed that one advantage of CityJSONSeq, besides that files containing thousands of features can be processed with a low memory footprint, is that it compresses further the CityJSON files by around 12\%, sometimes more.
 We discuss in Section~\ref{sec:experiments} the reasons for this interesting finding.
@@ -161,29 +161,29 @@ As shown in Figure~\ref{fig:cj_idea}, a CityJSON object, which is a JSON object,
 \begin{enumerate}
   \item \texttt{"type"}: it must be \texttt{"CityJSON"};
   \item \texttt{"version"}: \texttt{"2.0"} is the current version;
-  \item \texttt{"metadata"}: different metadata related to the dataset can be stored. The most important is the definition of the coordinate reference system (CRS)
+  \item \texttt{"metadata"}: different metadata related to the dataset can be stored. The most important is the definition of the coordinate reference system (CRS).
   \item \texttt{"transform"}: CityJSON \texttt{"vertices"} are compressed and stored as integers only. The parameters of this property allow us to convert from those integers back to real-world coordinates.
   \item \texttt{"CityObjects"}: a dictionary where the properties are the identifiers of the city objects (\emph{IDs}), which are any CityGML city object (for instance a \texttt{Building}, a \texttt{BuildingPart}, a \texttt{SolitaryVegetationObject}, etc.).
-  Each of the city objects is listed one after the other, even if some are \texttt{"children"} of others.
+  The city objects are listed one after the other, even if some are \texttt{"children"} of others.
   As an example, for a \texttt{Building} containing 2 parts, the 3 objects will be represented at the same level and linked by their \emph{IDs}, as shown in Figure~\ref{fig:parents_children}.
   The schema is thus flat and all hierarchies have been removed.
   Each city object can have a \texttt{"parents"} and/or a \texttt{"children"} property, and this is how in the snippet the building \texttt{"id-1"} is linked to its 2 parts.
   % We define 2nd-level city objects as having a \texttt{"parent"}.
   The fact that a dictionary is used means that developers have direct access to the city objects through their IDs (and also in constant time if a hashmap is used to implement the dictionary while parsing the file).
-  \item \texttt{"vertices"}: The 3D geometric primitives are those of CityGML, and multi/composite solids with several parts are supported.
+  \item \texttt{"vertices"}: The 3D geometric primitives in CityJSON are those of the CityGML data model, which means that multi/composite solids with several parts and/or cavities are supported.
   A geometric primitive does not list all the coordinates of its vertices, instead the coordinates of the vertices are stored in a separate array (the \texttt{"vertices"} property of the CityJSON object), and the geometric primitives refer to the position of a vertex in that array.
-  The indexing mechanism of the format \emph{Wavefront OBJ}\footnote{\url{https://en.wikipedia.org/wiki/Wavefront_.obj_file}} is reused, because it has been successfully used for many years in the computer graphics community.
+  The indexing mechanism of the format \emph{Wavefront OBJ}\footnote{\url{https://en.wikipedia.org/wiki/Wavefront_.obj_file}} is thus reused, because it has been successfully used for many years in the computer graphics community.
   There are several advantages to this approach.
   First, the files can be compressed: 3D vertices are often shared by several surfaces, and repeating them can be costly, especially if they are very precise (sub-millimetre precision is often used).
   Second, this approach increases the topological relationships that are explicitly stored in the file, and several operations (\eg\ are 2 buildings adjacent?) can be sped up and made more robust.
   Third, it is very easy to convert to a representation listing all coordinates; the inverse is not true. 
-  However, this list of vertices is exactly why the streaming of geometries is problematic: it can contain several millions vertices.
-  To be able to reconstruct one Building, all the \texttt{"vertices"} need to be in memory, which can mean waiting for millions of unused vertices to be loaded.
+  However, this list of vertices is the reason why the streaming of geometries is problematic, since in practice it can contain several millions vertices.
+  To be able to reconstruct one Building, all the \texttt{"vertices"} need to be in memory, which can mean waiting for millions of unused vertices to be deserialised.
   \item \texttt{"appearances"}: Both textures and materials for surfaces are supported.  
   The material of a surface is represented with the X3D specifications\footnote{\url{https://en.wikipedia.org/wiki/X3D}}, and for the textures the COLLADA specifications\footnote{\url{https://www.khronos.org/collada/}} are reused.
   \item \texttt{"geometry-templates"} 
-  Geometry templates are used to represent identical geometries several times, they only need to be defined once and translations/rotations/scaling are applied.
-  They are mostly used for city objects like trees and lamp posts. 
+  Geometry templates are geometries defined once and reused by applying a translation, a rotation, and/or a scaling.
+  They are mostly used for city objects like trees, bus stops, and lamp posts. 
 \end{enumerate}
 
 
@@ -235,12 +235,12 @@ In the context of geo-information, a \emph{stream} is a sequence of data that is
 %
 
 For GML-based formats (which are feature-centric), modifying a file for the purpose of streaming is usually a simple task that involves sending the features in the dataset one-by-one.
-However, notice that this is only true for simple files and GML features stored following the Simple Feature paradigm~\citep{OGC-SF}.
-For more complex data models like CityGML where \emph{Implicit Geometries} and \emph{XLinks} are used, the conversion often needs a large amount of pre-processing.
-\emph{XLinks} are links between elements in a file (similar to \emph{pointers} in a computer program), a concrete example in a CityGML file is a cube that lists the geometries of 5 of its surfaces, but its 6th surface is simply a link to another surface somewhere else in the file (which belongs to another building, for instance).
-If in the stream the linked surface has not be seen yet, the receiver cannot process the cube and needs to wait for that specific 6th surface to appear.
-It is not always possible to (re-)order a CityGML file so that all the references can be resolved without having to store locally information until it appears in the stream.
-However, it is always possible to resolve the \emph{XLinks} before streaming a dataset (that is copy the geometry of the 6th surface to the cube), but this means that filesize will increase, and that converting back to the original file will not be possible.
+However, notice that this is only true for GML files that follow the Simple Feature paradigm~\citep{OGC-SF}.
+For more complex data models like CityGML where geometry templates and \emph{XLinks} are used, streaming often needs a large amount of pre-processing.
+\emph{XLinks} are links between elements in a file (similar to \emph{pointers} in a computer program), a concrete example in a CityGML file is a cube that lists the geometries of 5 of its surfaces, but its 6th surface is simply a link to another surface somewhere else in the file (which belongs to another building for instance).
+If in the stream the linked surface has not be seen yet, the receiver cannot process the cube and needs to wait for that specific 6th surface to appear (\eg\ to calculate its volume).
+It is not always possible to (re-)order a CityGML file so that all the references can be resolved without having to store extra information until it appears in the stream.
+However, it is always possible to resolve the \emph{XLinks} before streaming a dataset (that is, in our example, copy the geometry of the 6th surface to the cube), but this means that filesize will increase, and that converting back to the original file will not be possible.
 
 %
 
@@ -250,10 +250,10 @@ There are no links possible between features, each JSON object is independent.
 %
 
 For formats that use a global indexing of vertices (as mentioned above, CityJSON is one of them, and  most formats used in computer graphics for meshes also, \eg\ OBJ and STL), the reorganisation of the elements in a file is more complex but nonetheless possible.
-\citet{Isenburg03} describe algorithms and tools that interleave the vertices and faces in a file (instead of having one large list of vertices at the end) and add simple tags to inform that vertices are used anymore (and thus can be freed from memory).
+\citet{Isenburg03} describe algorithms and tools that interleave the vertices and faces in a file (instead of having one large list of vertices at the end) and add simple tags to inform that specific vertices are not used anymore in the stream (and thus can be freed from memory).
 This allows us, in theory, to process/edit/manipulate infinitely large meshes, since they never have to be completely loaded in memory.
 The idea is exemplified by the construction of gridded terrains that are gigabytes in size~\citep{Isenburg06-1}.
-However, this cannot be implemented in CityJSON directly as all the vertices need to be in the one JSON property \texttt{"vertices"}.
+However, this cannot be implemented in CityJSON directly because all the vertices need to be listed in the JSON property \texttt{"vertices"}.
 
 
 %%%
@@ -264,7 +264,7 @@ However, this cannot be implemented in CityJSON directly as all the vertices nee
 
 As shown in Figure~\ref{fig:cjseq_idea}, a CityJSONSeq decomposes a CityJSON object into its features to create a sequence of several JSON objects.
 Those JSON objects are of type \texttt{CityJSONFeature}, which allows the storage of a single feature, for instance a \texttt{Building} together with its ``children'' objects (\eg\ a \texttt{BuildingPart} and/or a \texttt{BuildingInstallation}). 
-Unlike a CityJSON object, each feature is independent, it has its own list of vertices (which is thus \emph{local} to the JSON object, and is usually rather small, see next section for details) and its own textures and materials (if any).
+Each feature is independent, it has its own list of vertices (which is thus \emph{local} to the JSON object, and is usually rather small, see next section for details) and its own textures and materials (if any).
 The allowed properties are shown in Figure~\ref{fig:cjfeature}, notice that the \texttt{"id"} property is used to clearly identity the ``parent'' of the feature, in case there are children.
 \begin{figure}
 \begin{lstlisting}
@@ -302,17 +302,17 @@ CityJSONSeq follows the specifications of \texttt{ndjson} (newline delimited JSO
   \item each JSON Object must be followed by a new-line (LF: \texttt{"\textbackslash n"}) character, and it may be preceded by a carriage-return (CR: \texttt{"\textbackslash r"});
   \item a JSON Object must not contain the new-line or carriage-return characters;
   \item the first JSON Object must be of type \texttt{CityJSON};
-  \item the following JSON Objects are of type \texttt{CityJSONFeature}.
+  \item the following JSON Objects must be of type \texttt{CityJSONFeature}.
 \end{enumerate}
 
-Note that a \texttt{CityJSONFeature} object does not contain all the information that is required for parsing the feature. 
-Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geometry-templates"} must be known by the client in order to correctly reconstruct and georeference the city objects. 
+Note that a \texttt{CityJSONFeature} object does not contain all the information that is required for reconstructing the feature. 
+Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geometry-templates"} must be known in order to correctly reconstruct and georeference the city objects. 
 The rule \#4 ensures that those are available. 
 The CityJSON object must contain \texttt{"transform"} and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but they must be empty (to ensure that the JSON object is valid).
 
 %
 
-The CityJSONSeq for Figure~\ref{fig:cjseq_idea} is shown in Figure~\ref{fig:stream}:
+The CityJSONSeq for Figure~\ref{fig:cjseq_idea} is shown in Figure~\ref{fig:stream}.
 \begin{figure*}
   \begin{lstlisting}
   {"type":"CityJSON","version":"2.0","transform": {"scale":[1.0,1.0,1.0],"translate":[0.0, 0.0, 0.0]},"metadata":{"referenceSystem":"https://www.opengis.net/def/crs/EPSG/0/7415"},"CityObjects":{},"vertices":[]}
@@ -331,8 +331,8 @@ The CityJSONSeq for Figure~\ref{fig:cjseq_idea} is shown in Figure~\ref{fig:stre
 \label{sec:experiments}
 
 
-To convert between CityJSON and CityJSONSeq files (and vice-versa), we have developed the open-source software \emph{cjseq}, available at \url{https://github.com/cityjson/cjseq/} under a permissive open-source license.
-The command-line program takes care of converting not only the geometries, but also of the materials, textures, and geometry templates that the dataset could contain.
+To convert between CityJSON and CityJSONSeq files (and vice-versa), we have developed the open-source software \emph{cjseq}, which is available at \url{https://github.com/cityjson/cjseq/} under a permissive open-source license.
+The command-line program takes care of converting not only the geometries, but also the materials, the textures, and the geometry templates that the dataset could contain.
 It contains three sub-commands: 
 \begin{enumerate}
   \item \texttt{cat}: CityJSON $\rightarrow$ CityJSONSeq;
@@ -347,7 +347,6 @@ It should be observed that the conversion is an efficient process: the rather la
 %%%
 \subsection{Filesize comparison}
 
-% TODO: does the shared vertices informs us on anything? I think not and I would remove from the table.
 
 \begin{table*}
   \centering
