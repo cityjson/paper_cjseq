@@ -399,37 +399,52 @@ Only one dataset sees its filesize slightly increase, by 4\%, when serialised to
 One reason for this is that the size of the CityJSON file is rather small in the first place, and therefore the indices are not large integers.
 As an experiment, we have created around 100 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube randomly generated.
 There are no attributes, no semantics, and no textures/materials. 
-Figure~\ref{fig:synthetic_compression} shows that, as the CityJSON filesize increases, the compression factor increases.
+Figure~\ref{fig:compression_random.pdfn} shows that, as the CityJSON filesize increases, the compression factor increases.
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{figs/synthetic_compression.pdf}
+  \includegraphics[width=\linewidth]{figs/compression_random.pdf}
   \caption{Compression factor of CityJSONSeq files for different synthetic datasets containing only but simple cuboid buildings.}%
-\label{fig:synthetic_compression}
+\label{fig:compression_random}
 \end{figure}
-The smallest file contains 526 buildings and its compression factor is -2\% (thus CityJSONSeq has a larger filesize than that of CityJSON), while the largest file has \num{3960105} buildings, and a compression factor of 18\%.
+The smallest file contains only 526 buildings and its compression factor is -2\% (thus CityJSONSeq has a larger filesize than that of CityJSON), while the largest file has \num{3960105} buildings, and a compression factor of more than 12\%.
 
 %
 
-It should be noticed that the attributes attached to city objects, as well as the semantics attached to surfaces, have no influence on the compression factor since they are local to each city object.
+The number of shared vertices between different city objects also influences the compression factor. 
+Shared vertices are those used to represent walls incident to two adjacent buildings.
+In CityJSON they are conceptually the same vertices and each of the surfaces refer to them, but in CityJSONSeq they have to be listed separately in each of the buildings.
+It should be said that most of the datasets have very few vertices that are shared (most have less than 2\%).
+To understand the correlation between the compression factor and the percentage of shared vertices in a datasets, we have modified the script to generate random cuboid buildings: the distribution of the buildings is not random, we have enforced that several buildings are adjacent to others (so that they share vertices with other buildings).
+The relationship between the compression and the percentage of shared vertices can be seen in Figure~\ref{fig:compression_adjacent} for around 100 datasets containing exactly \num{1000000} buildings.
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figs/compression_adjacent.pdf}
+  \caption{Compression factor of CityJSONSeq files with respect to the percentage of shared vertices in a dataset that was synthetically generated.}% 
+\label{fig:compression_adjacent}
+\end{figure}
+If the number of shared vertices is 0\% this means that we have \num{1000000} buildings that are disconnected; in this case we obtain a compression factor of around 8\% (as was the case in Figure~\ref{fig:compression_random}).
+If all the buildings are adjacent to another one (thus nearly 100\% of the vertices are shared), then we can see that the compression factor is about -10\% (which means that the size of the CityJSONSeq file is larger than that of the CityJSON file).
+%
+
+It should also be noticed that the attributes attached to city objects, as well as the semantics attached to surfaces, have no influence on the compression factor since they are local to each city object.
 However, we can state that textures have an influence on the compression factor.
-See for instance the dataset \texttt{Helsinki} and its counterpart \texttt{Helsinki\_tex} (which is the same the same geometries and attributes, only the textures were removed from the former).
+See for instance the dataset \emph{Helsinki} and its counterpart \emph{Helsinki\_tex} (which is the same the same geometries and attributes, only the textures were removed).
 The dataset with textures has a compression of 10\% while the one without 28\%.
 This is explained by the fact that the \texttt{"textures"} property must be used for each feature, while in a CityJSON object they are all stored at only one location.
-Since textures can be used by several features (all the bricks of a building could use the same one), this means that often the same textures are copied to several features.
+Since textures can be used by several features (all the bricks of a building could use the same one), this means that often the same properties for textures are copied to several features.
 
 
 %%%
 \subsection{Processing speed comparison}
 
 We compare the speed and memory footprint of accessing each city object in a dataset.
-This operation is common in applications that manipulate city models.
+This operation is common in applications that manipulate 3D city models.
 
 When a city model is stored in its entirety in one CityJSON object, we need to deserialise the whole CityJSON object into memory in order to access the \texttt{"transform"} and \texttt{"vertices"} properties for instance.
 
-With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one (and thus never have in memory more than the city object itself and the metadata information).
+With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one (and thus never have in memory more than the city object itself and the first JSON object in the stream).
 As shown in the experiments below, this allows for very efficient operations in terms of both CPU and memory usage.
-Operations that would highly benefit from this are, for instance, filtering and merging 3D city models.
-Operations like modifying the CRS or updating the metadata would not even require to loop through the features, just to alter the first object in the file.
+% Operations that would highly benefit from this are, for instance, filtering and merging 3D city models.
 
 %
 
@@ -463,13 +478,15 @@ The scripts are available at \url{https://github.com/cityjson/paper_cjseq/tree/m
   \label{tab:ramtime}
 \end{table*}
 
-Notice that the dataset \emph{3DBV} contains not only buildings but the terrain, and a few large areas are stored as a triangulation containing a very amount of vertices; this is the reason why the maximum memory use is larger than for other datasets. 
+Notice that the dataset \emph{3DBV} contains not only buildings but the terrain, and a few large areas are stored as a triangulation containing a very large amount of vertices; this is the reason why the maximum memory use is larger than for other datasets. 
 
 %
 
 The results in Table~\ref{tab:ramtime} indicate that there is a very significant benefit to using CityJSONSeq over CityJSON, at least for operations that do not require analysing or processing city objects that are close to each other.
 Operations like calculating volumes, merging and subsetting files, finding city objects with specific attributes, etc.\ will all use significantly less memory and will be significantly faster.
-Operations like calculating the surface of shared walls~\citep{Agugiaro22} are not designed for streams.
+Operations like modifying the CRS or updating the metadata would not even require to loop through the features, just to alter the first object in the file.
+Operations like calculating the surface of shared walls~\citep{Agugiaro22} are however not designed for streams.
+
 
 %%%
 %
@@ -488,7 +505,7 @@ Pipelines allow us to chain several processes together, the output of a process 
 Given 2 processes, the 2nd one can usually start before the 1st one has finished processing all the data.
 This means that, in practice, the processing of a dataset can be performed by writing several programs that perform a few small/atomic tasks; this makes the development and maintenance of code simpler.
 Moreover, it allows us to write the code in different languages. 
-The pipeline used for preparing the datasets used in this paper was actually a mix of Python (the program `cjio' and `cjdb') and Rust (`cjseq'), and another program written in C++ could easy be added.
+The pipelines used for preparing the datasets used in this paper were actually a mix of Python (the program `cjio' and `cjdb') and Rust (`cjseq' and `cjval'), and another program written in C++ could easy be added.
 
 %
 
