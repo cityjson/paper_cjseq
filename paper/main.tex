@@ -91,9 +91,9 @@
 % \end{enumerate}
 % Abstracts must contain the title, the author(s) names incl. affiliations, the keywords and a summary of the contribution (research question, relevance, solution, evaluation).
 
-We present \emph{CityJSON Text Sequences} (CityJSONSeq in short), a format based on \emph{JSON Text Sequences} and CityJSON\@. 
+We introduce \emph{CityJSON Text Sequences} (CityJSONSeq in short), a format based on \emph{JSON Text Sequences} and CityJSON\@. 
 CityJSONSeq was added to the CityJSON version 2.0 standard to allow us to stream very large 3D city models.
-The main idea is to decompose a CityJSON dataset into its individual city objects (eg each building, each tree, etc.) and create several independent JSON objects of a newly defined type: \texttt{CityJSONFeature}.
+The main idea is to decompose a CityJSON dataset into its individual city objects (each building, each tree, etc.) and create several independent JSON objects of a newly defined type: \texttt{CityJSONFeature}.
 We elaborate on the engineering decisions that were taken to develop CityJSONSeq, we present the open-source software we have developed to convert to and from CityJSONSeq, and we discuss different aspects of the new format, \eg\ filesize, usability, memory footprint, etc.
 For several use-cases, we consider CityJSONSeq to be a better format than CityJSON because: (1) once serialised it is about 10\% more compact; (2) it takes an order of magnitude less time to process; and (3) it uses significantly less memory.
 }
@@ -125,9 +125,9 @@ The first official release of CityJSON (version 1.0) was a success:
 
 %
 
-However, the version 1.0 of CityJSON had one limitation: its structure for storing the coordinates of the geometries made the \emph{streaming} of very large datasets complex, if not impossible (see Figure~\ref{fig:cj_idea}).
+However, the version 1.0 of CityJSON had one limitation: its structure for storing the coordinates of the geometries (see Figure~\ref{fig:cj_idea}) made the \emph{streaming} of very large datasets complex, if not impossible.
 As further defined in Section~\ref{sec:streaming}, streaming refers to the possibility of downloading/transferring/processing a dataset without having to load it all in memory.
-Since datasets of 3D cities are nowadays very large (it is not uncommon to have CityGML-XML files over 2GB), the processing CityJSON files is an issue in practice.
+Since datasets of 3D cities are nowadays very large (it is not uncommon to have CityGML-XML files over 2GB), the processing CityJSON files is in practice an issue.
 
 %
 
