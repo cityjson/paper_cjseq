@@ -450,7 +450,7 @@ When a city model is stored in its entirety in one CityJSON object, we need to d
 With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one (and thus never have in memory more than the city object itself and the metadata information).
 As shown in the experiments below, this allows for very efficient operations in terms of both CPU and memory usage.
 Operations that would highly benefit from this are, for instance, filtering and merging 3D city models.
-Operations like modifying the CRS or updating the metadata would not even require to loop through the features, just to alter the first object in the file.
+Operations like modifying the CRS or updating the metadata would not even require to loop through the features, just to alter the CityJSON object.
 
 %
 
