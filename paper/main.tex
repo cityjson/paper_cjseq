@@ -310,6 +310,9 @@ Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geom
 The rule \#4 ensures that those are available. 
 The CityJSON object must contain \texttt{"transform"} and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but they must be empty (to ensure that the JSON object is valid).
 
+Futhermore, the CityJSON specification does not prescribe the storage of CityJSONSeq, only the structure of a CityJSONSeq stream (see the five constraints above).
+In practice, CityJSONSeq can be stored in a variety of ways, eg in a single file, each feature in a separate file, in a database etc., and the optimal storage solution depends on the implementing application.
+
 %
 
 The CityJSONSeq for Figure~\ref{fig:cjseq_idea} is shown in Figure~\ref{fig:stream}.
