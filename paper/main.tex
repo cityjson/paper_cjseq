@@ -310,7 +310,7 @@ Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geom
 The rule \#4 ensures that those are available. 
 The CityJSON object must contain \texttt{"transform"} and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but they must be empty (to ensure that the JSON object is valid).
 
-Futhermore, the CityJSON specification does not prescribe the storage of CityJSONSeq, only the structure of a CityJSONSeq stream (see the five constraints above).
+Furthermore, the CityJSON specification does not prescribe the storage of CityJSONSeq, only the structure of a CityJSONSeq stream (see the five constraints above).
 In practice, CityJSONSeq can be stored in a variety of ways, eg in a single file, each feature in a separate file, in a database etc., and the optimal storage solution depends on the implementing application.
 
 %
@@ -379,9 +379,9 @@ It should be observed that the conversion is an efficient process: the rather la
     \begin{tablenotes}[flushleft]
       \footnotesize
       \item ${}^{\text{(a)}}$ appearance: `tex' is textures stored; `mat' is material stored
-      \item ${}^{\text{(b)}}$ compression factor is $\frac{size(CityJSON) - size(CityJSONSeq)}{size(CityJSON)}$
+      \item ${}^{\text{(b)}}$ compressi{}on factor is $\frac{size(CityJSON) - size(CityJSONSeq)}{size(CityJSON)}$
       \item ${}^{\text{(c)}}$ number of vertices in the largest feature of the stream
-      \item ${}^{\text{(d)}}$ percentage of vertices that are used to represent different city objects (\eg\ the vertices of a wall shared by two buildings)
+      \item ${}^{\text{(d)}}$ percentage of vertices that are used to represent different city objects
     \end{tablenotes}
   \end{threeparttable}
 \end{table*}
@@ -416,7 +416,7 @@ The smallest file contains only 526 buildings and its compression factor is -2\%
 The number of shared vertices between different city objects also influences the compression factor. 
 Shared vertices are those used to represent walls incident to two adjacent buildings.
 In CityJSON they are conceptually the same vertices and each of the surfaces refer to them, but in CityJSONSeq they have to be listed separately in each of the buildings.
-It should be said that most of the datasets have very few vertices that are shared (most have less than 2\%).
+It should be said that most of the datasets have very few vertices that are shared (most have less than 2\%, except 2 datasets have around 20\%).
 To understand the correlation between the compression factor and the percentage of shared vertices in a datasets, we have modified the script to generate random cuboid buildings: the distribution of the buildings is not random, we have enforced that several buildings are adjacent to others (so that they share vertices with other buildings).
 The relationship between the compression and the percentage of shared vertices can be seen in Figure~\ref{fig:compression_adjacent} for around 100 datasets containing exactly \num{1000000} buildings.
 \begin{figure}
@@ -508,7 +508,7 @@ Pipelines allow us to chain several processes together, the output of a process 
 Given 2 processes, the 2nd one can usually start before the 1st one has finished processing all the data.
 This means that, in practice, the processing of a dataset can be performed by writing several programs that perform a few small/atomic tasks; this makes the development and maintenance of code simpler.
 Moreover, it allows us to write the code in different languages. 
-The pipelines used for preparing the datasets used in this paper were actually a mix of Python (the program `cjio' and `cjdb') and Rust (`cjseq' and `cjval'), and another program written in C++ could easy be added.
+The pipelines used for preparing the datasets used in this paper were actually a mix of Python (the program \emph{cjio} and \emph{cjdb}) and Rust (\emph{cjseq} and \emph{cjval}), and another program written in C++ could easy be added.
 
 %
 
@@ -516,7 +516,7 @@ Finally, because the structure of CityJSONSeq is nearly the same as that of City
 We have already added support for it in a few of the open-source CityJSON tools (see \url{https://www.cityjson.org/software/}) and we will continue in the future.
 
 
-\newpage
+% \newpage
 {
 	\begin{spacing}{1.17}
 		\normalsize
