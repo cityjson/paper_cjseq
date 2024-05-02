@@ -388,7 +388,7 @@ It should be observed that the conversion is an efficient process: the rather la
 
 We have converted with \emph{cjseq} several publicly available files, and Table~\ref{tab:datasets} shows an overview of the files stored both in CityJSON and CityJSONSeq.
 The files themselves are available at \url{https://github.com/cityjson/paper_cjseq/tree/main/data}.
-% @Hugo we should find a better way to share a link to the data. 
+% @Hugo we should find a better way to share a link to the data. We should also add it as a footnote?
 %
 
 First observe that---contrary to intuition---the filesize of a dataset serialised as a CityJSONSeq file is around 12\% compacter than serialised as a CityJSON file, and in the case of \emph{Helsinki} it is 28\%.
@@ -455,7 +455,7 @@ We have processed all the datasets from Table~\ref{tab:datasets} with two simple
 This is just an example of a simple local operation, any other operation such as calculating the area of the façades or counting the number of windows could have been performed.
 The results for both the maximum memory footprint and the time used are shown in Table~\ref{tab:ramtime}.
 The scripts are available at \url{https://github.com/cityjson/paper_cjseq/tree/main/scripts/}.
-% @Hugo I think this link is unecessary. 
+% @Hugo I think this link is unecessary. Or at least let\s make it a footnote.
 \begin{table*}
   \centering
   \caption{Comparison of the processing time and maximum RAM usage for processing CityJSON and CityJSONSeq files. The resident set size (RSS) is used, which is the portion of main memory occupied by the Python script.}
@@ -501,7 +501,9 @@ Operations like calculating the surface of shared walls~\citep{Agugiaro22} are h
 
 
 While CityJSONSeq was developed mostly for streaming large 3D city datasets, the fact that it has a much lower memory footprint and that it takes an order of magnitude less time to process (for some local operations) makes it an attractive alternative to CityJSON for several use-cases.
-
+For example, CityJSONSeq is used by \emph{cjdb} (a tool for storing CityJSON datasets in a relational database) so as to store independently one feature per row in the database.
+Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API. 
+% @Hugo: I added these examples, do we need to reference the cjdb paper?
 %
 
 From a practitioners point-of-view, we should stress that CityJSONSeq can easily be processed with \emph{Unix pipes} (also called \emph{pipelines}).
