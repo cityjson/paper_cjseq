@@ -500,9 +500,8 @@ Operations like calculating the surface of shared walls~\citep{Agugiaro22} are h
 
 
 While CityJSONSeq was developed mostly for streaming large 3D city datasets, the fact that it has a much lower memory footprint and that it takes an order of magnitude less time to process (for some local operations) makes it an attractive alternative to CityJSON for several use-cases.
-For example, CityJSONSeq is used by \emph{cjdb} (a tool for storing CityJSON datasets in a relational database) so as to store independently one feature per row in the database.
-Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API\@. 
-% @Hugo: I added these examples, do we need to reference the cjdb paper?
+For example, CityJSONSeq is used by \emph{cjdb} (a tool for storing CityJSON datasets in a relational database, see \citet{Powalka23}) to store independently one feature per row in the database.
+Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API\footnote{\url{https://api.3dbag.nl/}}, which contains all buildings in the Netherlands with detailed roofs~\citep{Peters22}. 
 
 %
 
