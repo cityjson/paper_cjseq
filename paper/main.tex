@@ -310,8 +310,6 @@ Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geom
 The rule \#4 ensures that those are available. 
 The CityJSON object must contain a \texttt{"transform"} property and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but they must be empty (to ensure that the JSON object is valid).
 
-Furthermore, the CityJSON specification does not prescribe the storage of CityJSONSeq, only the structure of a CityJSONSeq stream (see the five constraints above).
-In practice, CityJSONSeq can be stored in a variety of ways, eg in a single file, each feature in a separate file, in a database etc., and the optimal storage solution depends on the implementing application.
 
 %
 
@@ -500,7 +498,13 @@ Operations like calculating the surface of shared walls~\citep{Agugiaro22} are h
 
 
 While CityJSONSeq was developed mostly for streaming large 3D city datasets, the fact that it has a much lower memory footprint and that it takes an order of magnitude less time to process (for some local operations) makes it an attractive alternative to CityJSON for several use-cases.
-For example, CityJSONSeq is used by \emph{cjdb} (a tool for storing CityJSON datasets in a relational database, see \citet{Powalka23}) to store independently one feature per row in the database.
+
+%
+
+It should be noticed that the CityJSON specification does not prescribe the storage of CityJSONSeq, only the structure of a CityJSONSeq stream.
+In practice, CityJSONSeq can be stored in a variety of ways, for instance in a single file, each feature in a separate file, in a database, etc.
+The optimal storage solution depends on the implementing application.
+As a concrete example, we have implemented CityJSONSeq in the PostgreSQL, using \emph{cjdb}~\citep{Powalka23}, to store independently one feature per row in the database.
 Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API\footnote{\url{https://api.3dbag.nl/}}, which contains all buildings in the Netherlands with detailed roofs~\citep{Peters22}. 
 
 %
