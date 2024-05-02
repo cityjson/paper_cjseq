@@ -127,11 +127,11 @@ The first official release of CityJSON (version 1.0) was a success:
 
 However, the version 1.0 of CityJSON had one limitation: its structure for storing the coordinates of the geometries (see Figure~\ref{fig:cj_idea}) made the \emph{streaming} of very large datasets complex, if not impossible.
 As further defined in Section~\ref{sec:streaming}, streaming refers to the possibility of downloading/transferring/processing a dataset without having to load it all in memory.
-Since datasets of 3D cities are nowadays very large (it is not uncommon to have CityGML-XML files over 2GB), the processing CityJSON files is in practice an issue.
+Given the increasing size of datasets of 3D cities, with CityGML-XML files often exceeding 2GB, the processing of CityJSON files has become a practical challenge.
 
 %
 
-We present in this paper \emph{CityJSON Text Sequences} (\emph{CityJSONSeq} in short in the following), a format based on \emph{JSON Text Sequences}~\citep{IETF-JSONSeq} and CityJSON, and inspired by \emph{GeoJSON Text Sequences}~\citep{IETF-GeoJSONSeq}. 
+We present in this paper \emph{CityJSON Text Sequences} (henceforth referred to as \emph{CityJSONSeq}), a format based on \emph{JSON Text Sequences}~\citep{IETF-JSONSeq} and CityJSON, and inspired by \emph{GeoJSON Text Sequences}~\citep{IETF-GeoJSONSeq}. 
 CityJSONSeq was added to the CityJSON version 2.0 standard that was released in 2023 (and also standardised by the OGC, see \citet{OGC-CityJSON-v20}).
 As further described in Section~\ref{sec:cityjsonseq}, the idea is to decompose a (often large) CityJSON file into its individual \emph{features} (\eg\ each \texttt{Building}, each \texttt{Bridge}, etc.) and create several JSON objects of a newly defined type \texttt{CityJSONFeature}.
 These objects are either serialised into a text file, or streamed from a server to client or from one application to another.
