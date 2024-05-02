@@ -13,7 +13,7 @@
 
 % //-- HL:
 \usepackage{booktabs}
-% \usepackage{flushend}
+\usepackage{flushend}
 \usepackage{siunitx}
 \usepackage{threeparttable}
 \usepackage{url}
@@ -438,21 +438,6 @@ Since textures can be used by several features (all the bricks of a building cou
 %%%
 \subsection{Processing speed comparison}
 
-We compare the speed and memory footprint of accessing each city object in a dataset.
-This operation is common in applications that manipulate 3D city models.
-
-When a city model is stored in its entirety in one CityJSON object, we need to deserialise the whole CityJSON object into memory in order to access the \texttt{"transform"} and \texttt{"vertices"} properties for instance.
-
-With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one (and thus never have in memory more than the city object itself and the first JSON object in the stream).
-As shown in the experiments below, this allows for very efficient operations in terms of both CPU and memory usage.
-% Operations that would highly benefit from this are, for instance, filtering and merging 3D city models.
-
-%
-
-We have processed all the datasets from Table~\ref{tab:datasets} with two simple Python scripts that iterate through the city objects and their geometries, and increment a global counter for the geometry type (\texttt{Solid} or \texttt{MultiSurface}) and report it at the end.
-This is just an example of a simple local operation, any other operation such as calculating the area of the façades or counting the number of windows could have been performed.
-The results for both the maximum memory footprint and the time used are shown in Table~\ref{tab:ramtime}.
-The scripts are available in the reproducibility repository of the paper\footnote{\url{https://github.com/cityjson/paper_cjseq}}.
 \begin{table*}
   \centering
   \caption{Comparison of the processing time and maximum RAM usage for processing CityJSON and CityJSONSeq files. The resident set size (RSS) is used, which is the portion of main memory occupied by the Python script.}
@@ -478,6 +463,23 @@ The scripts are available in the reproducibility repository of the paper\footnot
   \end{tabular}%
   \label{tab:ramtime}
 \end{table*}
+
+We compare the speed and memory footprint of accessing each city object in a dataset.
+This operation is common in applications that manipulate 3D city models.
+
+When a city model is stored in its entirety in one CityJSON object, we need to deserialise the whole CityJSON object into memory in order to access the \texttt{"transform"} and \texttt{"vertices"} properties for instance.
+
+With a CityJSONSeq file, we can read the file line by line, processing and discarding the city objects one by one (and thus never have in memory more than the city object itself and the first JSON object in the stream).
+As shown in the experiments below, this allows for very efficient operations in terms of both CPU and memory usage.
+% Operations that would highly benefit from this are, for instance, filtering and merging 3D city models.
+
+%
+
+We have processed all the datasets from Table~\ref{tab:datasets} with two simple Python scripts that iterate through the city objects and their geometries, and increment a global counter for the geometry type (\texttt{Solid} or \texttt{MultiSurface}) and report it at the end.
+This is just an example of a simple local operation, any other operation such as calculating the area of the façades or counting the number of windows could have been performed.
+The results for both the maximum memory footprint and the time used are shown in Table~\ref{tab:ramtime}.
+The scripts are available in the reproducibility repository of the paper\footnote{\url{https://github.com/cityjson/paper_cjseq}}.
+
 
 Notice that the dataset \emph{3DBV} contains not only buildings but also the terrain, and a few large areas are stored as a triangulation containing a very large amount of vertices; this is the reason why the maximum memory use is larger than for other datasets. 
 
