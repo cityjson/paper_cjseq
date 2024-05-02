@@ -416,7 +416,7 @@ The smallest file contains only 526 buildings and its compression factor is -2\%
 The number of shared vertices between different city objects also influences the compression factor. 
 Shared vertices are those used to represent walls incident to two adjacent buildings.
 In CityJSON they are conceptually the same vertices and each of the surfaces refer to them, but in CityJSONSeq they have to be listed separately in each of the buildings.
-It should be said that most of the datasets have very few vertices that are shared (most have less than 2\%, except 2 datasets have around 20\%).
+It should be said that most of the datasets have very few vertices that are shared (most have less than 2\%, except 2 datasets have around 20\%, \emph{Rotterdam} being one of them).
 To understand the correlation between the compression factor and the percentage of shared vertices in a datasets, we have modified the script to generate random cuboid buildings: the distribution of the buildings is not random, we have enforced that several buildings are adjacent to others (so that they share vertices with other buildings).
 The relationship between the compression and the percentage of shared vertices can be seen in Figure~\ref{fig:compression_adjacent} for around 100 datasets containing exactly \num{1000000} buildings.
 \begin{figure}
