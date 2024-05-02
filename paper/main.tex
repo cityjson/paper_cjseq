@@ -263,9 +263,9 @@ However, this cannot be implemented in CityJSON directly because all the vertice
 
 
 As shown in Figure~\ref{fig:cjseq_idea}, a CityJSONSeq decomposes a CityJSON object into its features to create a sequence of several JSON objects.
-Those JSON objects are of type \texttt{CityJSONFeature}, which allows the storage of a single feature, for instance a \texttt{Building} together with its ``children'' objects (\eg\ a \texttt{BuildingPart} and/or a \texttt{BuildingInstallation}). 
+Those JSON objects are of type \texttt{CityJSONFeature}, which allows the storage of a single feature, for instance a \texttt{Building}, together with its ``children'' objects (\eg\ a \texttt{BuildingPart} and/or a \texttt{BuildingInstallation}). 
 Each feature is independent, it has its own list of vertices (which is thus \emph{local} to the JSON object, and is usually rather small, see next section for details) and its own textures and materials (if any).
-The allowed properties are shown in Figure~\ref{fig:cjfeature}, notice that the \texttt{"id"} property is used to clearly identity the ``parent'' of the feature, in case there are children.
+The allowed properties are shown in Figure~\ref{fig:cjfeature}; notice that the \texttt{"id"} property is used to clearly identity the ``parent'' of the feature, in case there are children.
 \begin{figure}
 \begin{lstlisting}
 {
@@ -290,7 +290,7 @@ The allowed properties are shown in Figure~\ref{fig:cjfeature}, notice that the 
   "vertices": [...]
 }
 \end{lstlisting}
-\caption{An example of a \texttt{CityJSONFeature} for one Building have a balcony (as its \texttt{"children"}).}%
+\caption{An example of a \texttt{CityJSONFeature} for a Building with a balcony referenced in its \texttt{"children"} property.}%
 \label{fig:cjfeature}
 \end{figure}
 
@@ -308,7 +308,7 @@ CityJSONSeq follows the specifications of \texttt{ndjson} (newline delimited JSO
 Note that a \texttt{CityJSONFeature} object does not contain all the information that is required for reconstructing the feature. 
 Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geometry-templates"} must be known in order to correctly reconstruct and georeference the city objects. 
 The rule \#4 ensures that those are available. 
-The CityJSON object must contain \texttt{"transform"} and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but they must be empty (to ensure that the JSON object is valid).
+The CityJSON object must contain a \texttt{"transform"} property and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but they must be empty (to ensure that the JSON object is valid).
 
 Furthermore, the CityJSON specification does not prescribe the storage of CityJSONSeq, only the structure of a CityJSONSeq stream (see the five constraints above).
 In practice, CityJSONSeq can be stored in a variety of ways, eg in a single file, each feature in a separate file, in a database etc., and the optimal storage solution depends on the implementing application.
