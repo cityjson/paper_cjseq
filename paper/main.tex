@@ -172,16 +172,16 @@ As shown in Figure~\ref{fig:cj_idea}, a CityJSON object, which is a JSON object,
   The fact that a dictionary is used means that developers have direct access to the city objects through their IDs (and also in constant time if a hashmap is used to implement the dictionary while parsing the file).
   \item \texttt{"vertices"}: The 3D geometric primitives in CityJSON are those of the CityGML data model, which means that multi/composite solids with several parts and/or cavities are supported.
   A geometric primitive does not list all the coordinates of its vertices, instead the coordinates of the vertices are stored in a separate array (the \texttt{"vertices"} property of the CityJSON object), and the geometric primitives refer to the position of a vertex in that array.
-  The indexing mechanism of the format \emph{Wavefront OBJ}\footnote{\url{https://en.wikipedia.org/wiki/Wavefront_.obj_file}} is thus reused, because it has been successfully used for many years in the computer graphics community.
+  This indexing mechanism has been successfully used for many years by the computer graphics community in formats as \emph{Wavefront OBJ}\footnote{\url{https://en.wikipedia.org/wiki/Wavefront_.obj_file}}.
   There are several advantages to this approach.
   First, the files can be compressed: 3D vertices are often shared by several surfaces, and repeating them can be costly, especially if they are very precise (sub-millimetre precision is often used).
-  Second, this approach increases the topological relationships that are explicitly stored in the file, and several operations (\eg\ are 2 buildings adjacent?) can be sped up and made more robust.
-  Third, it is very easy to convert to a representation listing all coordinates; the inverse is not true. 
+  Second, this approach increases the topological relationships that are explicitly stored in the file, and several operations (\eg\ determining building adjacency) can be sped up and made more robust.
+  Third, it is very easy to convert all coordinates to a representation listing; the inverse is not true. 
   However, this list of vertices is the reason why the streaming of geometries is problematic, since in practice it can contain several millions vertices.
-  To be able to reconstruct one Building, all the \texttt{"vertices"} need to be in memory, which can mean waiting for millions of unused vertices to be deserialised.
+  To be able to reconstruct a single Building, all the \texttt{"vertices"} need to loaded in memory, which can mean waiting for millions of unused vertices to be deserialised.
   \item \texttt{"appearances"}: Both textures and materials for surfaces are supported.  
   The material of a surface is represented with the X3D specifications\footnote{\url{https://en.wikipedia.org/wiki/X3D}}, and for the textures the COLLADA specifications\footnote{\url{https://www.khronos.org/collada/}} are reused.
-  \item \texttt{"geometry-templates"} 
+  \item \texttt{"geometry-templates"}: 
   Geometry templates are geometries defined once and reused by applying a translation, a rotation, and/or a scaling.
   They are mostly used for city objects like trees, bus stops, and lamp posts. 
 \end{enumerate}
