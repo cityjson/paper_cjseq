@@ -300,3 +300,6 @@ TSWLatexianTemp*
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
 paper/main.pdf
+scripts/data/*
+scripts/data_random/*
+scripts/data_adjacent/*

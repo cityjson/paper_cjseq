@@ -2,7 +2,37 @@ import json
 import sys
 import random
 import uuid
+import os
+import glob
+import math
 
+def main():
+    total_buildings = 100
+    groups = range(0, math.floor(math.log(total_buildings, 2))+1)
+    for group in groups:
+        g = round(math.pow(2, group))
+        co = round(total_buildings / g)
+        write_cjseq(g, co)
+    write_cjseq(1, total_buildings)
+    #-- convert to cityjson
+    fs = glob.glob('./data_adjacent/*.jsonl')
+    for f in fs:
+        s = "cjseq collect -f {} > {}".format(f, f[:-1])
+        # print(s)
+        os.system(s)
+
+def write_cjseq(no_groups, no_co):
+    fname = "./data_adjacent/" + str(no_co) + ".jsonl"
+    fo = open(fname, "w")
+    #-- write first line
+    j = {"type": "CityJSON", "version": "2.0", "CityObjects": {}, "transform": {}, "vertices": []}
+    j["transform"]["scale"] = [1.0, 1.0, 1.0]
+    j["transform"]["translate"] = [0.0, 0.0, 0.0]
+    json_str = json.dumps(j, separators=(',',':'))
+    fo.write(json_str + "\n")
+    #-- write CityJSONFeature lines
+    for group in range(no_groups):
+        new_cityjson_group(no_co, fo)
 
 
 def gen_onecube():
@@ -31,19 +61,9 @@ def gen_vertices(offsets):
     return vs
 
 
-def main():
-    #-- write first line
-    j = {"type": "CityJSON", "version": "2.0", "CityObjects": {}, "transform": {}, "vertices": []}
-    j["transform"]["scale"] = [1.0, 1.0, 1.0]
-    j["transform"]["translate"] = [0.0, 0.0, 0.0]
-    json_str = json.dumps(j, separators=(',',':'))
-    sys.stdout.write(json_str + "\n")
-    #-- write CityJSONFeature lines
-    for group in range(int(sys.argv[1])):
-        new_cityjson_group(int(sys.argv[2]))
     
 
-def new_cityjson_group(number_of_co):        
+def new_cityjson_group(number_of_co, fo):        
     offsets = [random.randint(0,10000), random.randint(0,10000), random.randint(0,10000)]
     for i in range(number_of_co):
         j = {"type": "CityJSONFeature", "CityObjects": {}, "vertices": []}
@@ -56,7 +76,7 @@ def new_cityjson_group(number_of_co):
         j["vertices"] = gen_vertices(offsets) 
         offsets[2] += 1
         json_str = json.dumps(j, separators=(',',':'))
-        sys.stdout.write(json_str + "\n")
+        fo.write(json_str + "\n")
 
 
 if __name__ == '__main__':
