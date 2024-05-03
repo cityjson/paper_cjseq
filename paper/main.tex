@@ -504,8 +504,6 @@ Operations like calculating the surface of shared walls~\citep{Agugiaro22} are h
 \section{Discussion and future work}%
 \label{sec:discussion}
 
-% TODO: add conclusions
-
 
 While CityJSONSeq was developed mostly for streaming large 3D city datasets, the fact that it has a much lower memory footprint and that it takes an order of magnitude less time to process (for some local operations) makes it an attractive alternative to CityJSON for several use-cases.
 
@@ -514,22 +512,22 @@ While CityJSONSeq was developed mostly for streaming large 3D city datasets, the
 It should be noticed that the CityJSON specification does not prescribe the storage of CityJSONSeq, only the structure of a CityJSONSeq stream.
 In practice, CityJSONSeq can be stored in a variety of ways, for instance in a single file, each feature in a separate file, in a database, etc.
 The optimal storage solution depends on the implementing application.
-As a concrete example, we have implemented CityJSONSeq in the PostgreSQL, using \emph{cjdb}~\citep{Powalka23}, to store independently one feature per row in the database.
+As a concrete example, we have implemented CityJSONSeq in the PostgreSQL database, using \emph{cjdb}~\citep{Powalka23}, to store independently one feature per row in the database.
 Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API\footnote{\url{https://api.3dbag.nl/}}, which contains all buildings in the Netherlands with detailed roofs~\citep{Peters22}. 
 
 %
 
-From a practitioners point-of-view, we should stress that CityJSONSeq can easily be processed with \emph{Unix pipes} (also called \emph{pipelines}).
+From the point-of-view of practitioners, we should stress that CityJSONSeq can easily be processed with \emph{Unix pipes} (also called \emph{pipelines}).
 Pipelines allow us to chain several processes together, the output of a process becomes the input of the next one, and so on. 
 Given 2 processes, the 2nd one can usually start before the 1st one has finished processing all the data.
-This means that, in practice, the processing of a dataset can be performed by writing several programs that perform a few small/atomic tasks; this makes the development and maintenance of code simpler.
+This means that, in practice, the processing of a dataset can be performed by writing several programs that perform a few small tasks; this makes the development and maintenance of code simpler.
 Moreover, it allows us to write the code in different languages. 
 The pipelines used for preparing the datasets used in this paper were actually a mix of Python (the program \emph{cjio} and \emph{cjdb}) and Rust (\emph{cjseq} and \emph{cjval}), and another program written in C++ could easy be added.
 
 %
 
-Finally, because the structure of CityJSONSeq is nearly the same as that of CityJSON, in practice adding support for CityJSONSeq requires a minimum amount of effort since most of the code already existing can be reused. 
-We have already added support for it in a few of the open-source CityJSON tools (see \url{https://www.cityjson.org/software/}) and we will continue in the future.
+Finally, because the structure of CityJSONSeq is nearly the same as that of CityJSON, in practice adding support for CityJSONSeq requires a minimum amount of effort since most of the code to parse and/or generate CityJSON objects can be reused. 
+We have already added support for CityJSONSeq in a few of the open-source tools (see \url{https://www.cityjson.org/software/}) and we will continue in the future.
 
 
 % \newpage
