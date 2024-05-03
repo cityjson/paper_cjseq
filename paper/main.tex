@@ -390,17 +390,22 @@ The files are available in the reproducibility repository of the paper\footnote{
 %
 
 First observe that---contrary to intuition---the filesize of a dataset serialised as a CityJSONSeq file is around 12\% compacter than serialised as a CityJSON file, and in the case of \emph{Helsinki} it is 28\%.
-The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0'' and is incremented by 1 until the total number of vertices), and they do not increase to very large integers in contrast to the vertices in CityJSON.
+The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0'' and is incremented by 1 until the total number of vertices), and they do not increase to very large integers in contrast to the vertices in CityJSON\@.
 For instance, the dataset \emph{Helsinki} contains a total of more than 3 millions vertices, but its largest feature contains only but 2202 vertices.
 The fact that many indices are used for representing the geometries (and the textures) means that if several large numbers are used then the filesize will grow; if the maximum vertex index is around 2000 for each feature then the filesize will be reduced.
 
 %
 
 Only one dataset sees its filesize slightly increase, by 4\%, when serialised to a CityJSONSeq file: \emph{Rotterdam}.
-One reason for this is that the size of the CityJSON file is rather small in the first place, and therefore the indices are not large integers.
-As an experiment, we have created around 100 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube randomly generated.
+The reasons for the increase (or decrease) are many, and we discuss in the following the 3 most relevant: (1) the total number of vertices; (2) the number of shared vertices; (3) the presence of textures.
+
+%
+
+\paragraph{Number of vertices.} 
+If a dataset has few vertices, as it is the case with \emph{Rotterdam}, then the indices will not be large integers and this might not be favourable for the compression.
+As an experiment, we have created around 100 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube, which is randomly generated.
 There are no attributes, no semantics, and no textures/materials. 
-Figure~\ref{fig:compression_random.pdfn} shows that, as the CityJSON filesize increases, the compression factor increases.
+Figure~\ref{fig:compression_random} shows that, as the CityJSON filesize increases, the compression factor increases.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{figs/compression_random.pdf}
@@ -411,6 +416,7 @@ The smallest file contains only 526 buildings and its compression factor is -2\%
 
 %
 
+\paragraph{Shared vertices.} 
 The number of shared vertices between different city objects also influences the compression factor. 
 Shared vertices are those used to represent walls incident to two adjacent buildings.
 In CityJSON they are conceptually the same vertices and each of the surfaces refer to them, but in CityJSONSeq they have to be listed separately in each of the buildings.
@@ -425,8 +431,10 @@ The relationship between the compression and the percentage of shared vertices c
 \end{figure}
 If the number of shared vertices is 0\% this means that we have \num{1000000} buildings that are disconnected; in this case we obtain a compression factor of around 8\% (as was the case in Figure~\ref{fig:compression_random}).
 If all the buildings are adjacent to another one (thus nearly 100\% of the vertices are shared), then we can see that the compression factor is about -10\% (which means that the size of the CityJSONSeq file is larger than that of the CityJSON file).
+
 %
 
+\paragraph{Textures.} 
 It should also be noticed that the attributes attached to city objects, as well as the semantics attached to surfaces, have no influence on the compression factor since they are local to each city object.
 However, we can state that textures have an influence on the compression factor.
 See for instance the dataset \emph{Helsinki} and its counterpart \emph{Helsinki\_tex} (which is the same the same geometries and attributes, only the textures were removed).
