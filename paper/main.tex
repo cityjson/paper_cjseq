@@ -390,7 +390,7 @@ The files are available in the reproducibility repository of the paper\footnote{
 %
 
 First observe that---contrary to intuition---the filesize of a dataset serialised as a CityJSONSeq file is around 12\% compacter than serialised as a CityJSON file, and in the case of \emph{Helsinki} it is 28\%.
-An even larger compression factor is noted in most datasets whose texture, materials, semntics and attributes have been removed. 
+An even larger compression factor is noted in most datasets whose texture, materials, semantics and attributes have been removed. 
 The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0'' and is incremented by 1 until the total number of vertices), and they do not increase to very large integers in contrast to the vertices in CityJSON\@.
 For instance, the dataset \emph{Helsinki} contains a total of more than 3 millions vertices, but its largest feature contains only but 2202 vertices.
 The fact that many indices are used for representing the geometries (and the textures) means that if several large numbers are used then the filesize will grow; if the maximum vertex index is around 2000 for each feature then the filesize will be reduced.
