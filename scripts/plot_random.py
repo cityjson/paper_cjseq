@@ -46,7 +46,7 @@ ax.plot(df[0], compr)
 # ax.plot(df[0], compr, marker=".")
 # ax.plot(z[:,0], compr)
 
-ax.set(xlabel='Number of buildings', ylabel='file compression')
+ax.set(xlabel='Number of buildings', ylabel='compression factor')
 # ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%.0f'))
 
 # ax.set_xlim(-1, 100000)
