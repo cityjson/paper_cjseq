@@ -425,7 +425,7 @@ The smallest file contains only 526 buildings and its compression factor is -2\%
     \caption{}%
   \label{fig:compression_adjacent}
   \end{subfigure}
-  \caption{Compression factor of CityJSONSeq files for different synthetic datasets. \textbf{(a)} Based on the number of buildings; the buildings are stored as simple cuboid that are randomly generated. \textbf{(b)} Based on the percentage of shared vertices. The same cuboid buildings are used, but we locate them adjacent to each others to create shared vertices.}%
+  \caption{Compression factor of CityJSONSeq files for different synthetic datasets. \textbf{(a)} Based on the number of buildings; the buildings are stored as simple cuboids that are randomly generated. \textbf{(b)} Based on the percentage of shared vertices; the same cuboid buildings are used, but we position them adjacent to each others to create shared vertices.}%
 \label{fig:compression}
 \end{figure*}
 
@@ -521,8 +521,8 @@ While CityJSONSeq was developed mostly for streaming large 3D city datasets, the
 It should be noticed that the CityJSON specification does not prescribe the storage of CityJSONSeq, only the structure of a CityJSONSeq stream.
 In practice, CityJSONSeq can be stored in a variety of ways, for instance in a single file, each feature in a separate file, in a database, etc.
 The optimal storage solution depends on the implementing application.
-As a concrete example, we have implemented CityJSONSeq in the PostgreSQL database, using \emph{cjdb}~\citep{Powalka23}, to store independently one feature per row in the database.
-Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API\footnote{\url{https://api.3dbag.nl/}}, which contains all buildings in the Netherlands with detailed roofs~\citep{Peters22}. 
+As a concrete example, CityJSONSeq is used by \emph{cjdb}~\citep{Powalka23}, an importer/exporter tool that stores one feature per row in PostgresSQL.
+Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API\footnote{\url{https://api.3dbag.nl/}}, which contains all 10 million buildings in the Netherlands with detailed roofs~\citep{Peters22}. 
 
 %
 
