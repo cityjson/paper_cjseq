@@ -15,7 +15,6 @@
 \usepackage{booktabs}
 \usepackage{flushend}
 \usepackage{siunitx}
-\usepackage{rotating}
 \usepackage{threeparttable}
 \usepackage{url}
 \newcommand{\ie}{ie}
@@ -350,7 +349,7 @@ It should be observed that the conversion is an efficient process: the rather la
 \subsection{Filesize comparison}
 
 
-\begin{sidewaystable*}
+\begin{table*}
   \centering
   \begin{threeparttable}
   \caption{The datasets used for the benchmark. }%
@@ -358,33 +357,32 @@ It should be observed that the conversion is an efficient process: the rather la
   \small
   \begin{tabular}
     {@{}lcccccrrrcrrr@{}}\toprule
-    &&  \multicolumn{2}{c}{\textbf{dataset}} && \multicolumn{4}{c}{\textbf{size of file}} && \multicolumn{3}{c}{\textbf{vertices}}   \\ 
-    \cmidrule{3-4} \cmidrule{6-9} \cmidrule{11-13} 
-     && CityObjects &  app.\footnotesize ${}^{\text{(a)}}$ && CityJSON & CityJSONSeq & compr.\footnotesize ${}^{\text{(b)}}$ & clean compr.\footnotesize ${}^{\text{(c)}}$&& total & largest\footnotesize ${}^{\text{(d)}}$ & shared\footnotesize ${}^{\text{(e)}}$ \\
+    &&  \multicolumn{2}{c}{\textbf{dataset}} && \multicolumn{3}{c}{\textbf{size of file}} && \multicolumn{3}{c}{\textbf{vertices}}   \\ 
+    \cmidrule{3-4} \cmidrule{6-8} \cmidrule{10-12} 
+     && CityObjects &  app.\footnotesize ${}^{\text{(a)}}$ && CityJSON & CityJSONSeq & compr.\footnotesize ${}^{\text{(b)}}$ && total & largest\footnotesize ${}^{\text{(c)}}$ & shared\footnotesize ${}^{\text{(d)}}$ \\
     \midrule
-    \textbf{3DBAG}          && \qty{1110} bldgs    &         && \qty{6.7}{\mega\byte} & \qty{5.9}{\mega\byte} & 12\% & 18\%  &&     \num{82509} &    \num{4112} &  0.1\% \\
-    \textbf{3DBV}           && \qty{71634} misc    &         && \qty{378}{\mega\byte} & \qty{317}{\mega\byte} & 16\% & 19\%  &&   \num{4110319} &  \num{116670} & 21.0\% \\
-    \textbf{Helsinki}       && \qty{77231} bldgs   &         && \qty{572}{\mega\byte} & \qty{412}{\mega\byte} & 28\% & 24\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
-    \textbf{Helsinki\_tex}  && \qty{77231} bldgs   & tex     && \qty{713}{\mega\byte} & \qty{644}{\mega\byte} & 10\% & 10\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
-    \textbf{Ingolstadt}     && \qty{55} bldgs      &         && \qty{4.8}{\mega\byte} & \qty{3.8}{\mega\byte} & 25\% & 10\%  &&     \num{87972} &   \num{12800} &  0.0\% \\
-    \textbf{Montréal}       && \qty{294} bldgs     & tex     && \qty{5.4}{\mega\byte} & \qty{4.6}{\mega\byte} & 15\% & 17\%  &&     \num{31585} &    \num{3393} &  2.0\% \\
-    \textbf{NYC}            && \qty{23777} bldgs   &         && \qty{105}{\mega\byte} &  \qty{95}{\mega\byte} & 10\% & 19\%  &&   \num{1035804} &    \num{2608} &  0.8\% \\
-    \textbf{Railway}        && \qty{50} misc       & tex+mat && \qty{4.3}{\mega\byte} & \qty{4.0}{\mega\byte} &  8\% &  9\%  &&     \num{73554} &   \num{14966} &  0.4\% \\
-    \textbf{Rotterdam}      && \qty{853} bldgs     & tex     && \qty{2.6}{\mega\byte} & \qty{2.7}{\mega\byte} & -4\% &  1\%  &&     \num{22246} &     \num{631} & 20.0\% \\
-    \textbf{Vienna}         && \qty{307} bldgs     &         && \qty{5.4}{\mega\byte} & \qty{4.8}{\mega\byte} & 11\% & 19\%  &&     \num{47220} &    \num{2025} &  0.0\% \\
-    \textbf{Zürich}         && \qty{52834} bldgs   &         && \qty{279}{\mega\byte} & \qty{247}{\mega\byte} & 11\% & 15\%  &&   \num{3472989} &    \num{4069} &  2.6\% \\
+    \textbf{3DBAG}          && \qty{1110} bldgs    &         && \qty{6.7}{\mega\byte} & \qty{5.9}{\mega\byte} & 12\%  &&     \num{82509} &    \num{4112} &  0.1\% \\
+    \textbf{3DBV}           && \qty{71634} misc   &         && \qty{378}{\mega\byte} & \qty{317}{\mega\byte} & 16\%  &&   \num{4110319} &  \num{116670} & 21.0\% \\
+    \textbf{Helsinki}       && \qty{77231} bldgs   &         && \qty{572}{\mega\byte} & \qty{412}{\mega\byte} & 28\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
+    \textbf{Helsinki\_tex}  && \qty{77231} bldgs   & tex     && \qty{713}{\mega\byte} & \qty{644}{\mega\byte} & 10\%  &&   \num{3038576} &    \num{2202} &  0.0\% \\
+    \textbf{Ingolstadt}     && \qty{55} bldgs      &         && \qty{4.8}{\mega\byte} & \qty{3.8}{\mega\byte} & 25\%  &&     \num{87972} &   \num{12800} &  0.0\% \\
+    \textbf{Montréal}       && \qty{294} bldgs     & tex     && \qty{5.4}{\mega\byte} & \qty{4.6}{\mega\byte} & 15\%  &&     \num{31585} &    \num{3393} &  2.0\% \\
+    \textbf{NYC}            && \qty{23777} bldgs   &         && \qty{105}{\mega\byte} &  \qty{95}{\mega\byte} & 10\%  &&   \num{1035804} &    \num{2608} &  0.8\% \\
+    \textbf{Railway}        && \qty{50} misc      & tex+mat && \qty{4.3}{\mega\byte} & \qty{4.0}{\mega\byte} &  8\%  &&     \num{73554} &   \num{14966} &  0.4\% \\
+    \textbf{Rotterdam}      && \qty{853} bldgs     & tex     && \qty{2.6}{\mega\byte} & \qty{2.7}{\mega\byte} & -4\%  &&     \num{22246} &     \num{631} & 20.0\% \\
+    \textbf{Vienna}         && \qty{307} bldgs     &         && \qty{5.4}{\mega\byte} & \qty{4.8}{\mega\byte} & 11\%  &&     \num{47220} &    \num{2025} &  0.0\% \\
+    \textbf{Zürich}         && \qty{52834} bldgs   &         && \qty{279}{\mega\byte} & \qty{247}{\mega\byte} & 11\%  &&   \num{3472989} &    \num{4069} &  2.6\% \\
     \bottomrule
   \end{tabular}
     \begin{tablenotes}[flushleft]
       \footnotesize
       \item ${}^{\text{(a)}}$ appearance: `tex' is textures stored; `mat' is material stored
       \item ${}^{\text{(b)}}$ compressi{}on factor is $\frac{size(CityJSON) - size(CityJSONSeq)}{size(CityJSON)}$
-      \item ${}^{\text{(c)}}$ clean means we remove attributes, textures, materials, and semantics.
-      \item ${}^{\text{(d)}}$ number of vertices in the largest feature of the stream
-      \item ${}^{\text{(e)}}$ percentage of vertices that are used to represent different city objects
+      \item ${}^{\text{(c)}}$ number of vertices in the largest feature of the stream
+      \item ${}^{\text{(d)}}$ percentage of vertices that are used to represent different city objects
     \end{tablenotes}
   \end{threeparttable}
-\end{sidewaystable*}
+\end{table*}
 
 We have converted with \emph{cjseq} several publicly available files, and Table~\ref{tab:datasets} shows an overview of the files stored both in CityJSON and CityJSONSeq.
 The files are available in the reproducibility repository of the paper\footnote{\url{https://github.com/cityjson/paper_cjseq}}.
@@ -392,7 +390,6 @@ The files are available in the reproducibility repository of the paper\footnote{
 %
 
 First observe that---contrary to intuition---the filesize of a dataset serialised as a CityJSONSeq file is around 12\% compacter than serialised as a CityJSON file, and in the case of \emph{Helsinki} it is 28\%.
-An even larger compression factor is noted in most datasets whose texture, materials, semntics and attributes have been removed. 
 The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0'' and is incremented by 1 until the total number of vertices), and they do not increase to very large integers in contrast to the vertices in CityJSON\@.
 For instance, the dataset \emph{Helsinki} contains a total of more than 3 millions vertices, but its largest feature contains only but 2202 vertices.
 The fact that many indices are used for representing the geometries (and the textures) means that if several large numbers are used then the filesize will grow; if the maximum vertex index is around 2000 for each feature then the filesize will be reduced.
@@ -499,7 +496,7 @@ Notice that the dataset \emph{3DBV} contains not only buildings but also the ter
 The results in Table~\ref{tab:ramtime} indicate that there is a significant benefit to using CityJSONSeq over CityJSON, at least for operations that do not require analysing or processing city objects that are close to each other.
 Operations like calculating volumes, merging and subsetting files, finding city objects with specific attributes, etc.\ will all use significantly less memory and will be significantly faster.
 Operations like modifying the CRS or updating the metadata would not even require to loop through the features, just to alter the first object in the file.
-Operations like calculating the surface of shared walls~\citep{Agugiaro22} are however not designed for streams.
+Operations like calculating the surface of shared walls~\citep{Agugiaro22} are however not suitable for streams.
 
 
 %%%
@@ -530,7 +527,7 @@ The pipelines used for preparing the datasets used in this paper were actually a
 %
 
 Finally, because the structure of CityJSONSeq is nearly the same as that of CityJSON, in practice adding support for CityJSONSeq requires a minimum amount of effort since most of the code to parse and/or generate CityJSON objects can be reused. 
-We have already added support for CityJSONSeq in a few of the open-source tools \footnote{\url{https://www.cityjson.org/software/}} and we will continue in the future.
+We have already added support for CityJSONSeq in a few of the open-source tools (see \url{https://www.cityjson.org/software/}) and we will continue in the future.
 
 
 % \newpage
