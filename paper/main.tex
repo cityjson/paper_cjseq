@@ -2,7 +2,7 @@
 % chktex-file 46 
 
 \documentclass{isprs} % isprs class modified 23-04-2019 (Dennis Wittich)
-\usepackage{subfigure}
+\usepackage{subcaption}
 \usepackage{setspace}
 \usepackage{geometry} % added 27-02-2014 Markus Englich
 \usepackage{epstopdf}
@@ -13,7 +13,7 @@
 
 % //-- HL:
 \usepackage{booktabs}
-% \usepackage{flushend}
+\usepackage{flushend}
 \usepackage{siunitx}
 \usepackage{threeparttable}
 \usepackage{url}
@@ -407,13 +407,27 @@ If a dataset has few vertices, as it is the case with \emph{Rotterdam}, then the
 As an experiment, we have created around 100 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube, which is randomly generated.
 There are no attributes, no semantics, and no textures/materials. 
 Figure~\ref{fig:compression_random} shows that, as the CityJSON filesize increases, the compression factor increases.
-\begin{figure}
-  \centering
-  \includegraphics[width=\linewidth]{figs/compression_random.pdf}
-  \caption{Compression factor of CityJSONSeq files for different synthetic datasets containing only but simple cuboid buildings.}%
-\label{fig:compression_random}
-\end{figure}
 The smallest file contains only 526 buildings and its compression factor is -2\% (thus CityJSONSeq has a larger filesize than that of CityJSON), while the largest file has \num{3960105} buildings, and a compression factor of more than 12\%.
+
+
+
+\begin{figure*}
+  \centering
+  \begin{subfigure}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{figs/compression_random.pdf}
+    \caption{}%
+  \label{fig:compression_random}
+  \end{subfigure}%
+  \begin{subfigure}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{figs/compression_adjacent.pdf}
+    \caption{}%
+  \label{fig:compression_adjacent}
+  \end{subfigure}
+  \caption{Compression factor of CityJSONSeq files for different synthetic datasets. \textbf{(a)} Based on the number of buildings; the buildings are stored as simple cuboid that are randomly generated. \textbf{(b)} Based on the percentage of shared vertices. The same cuboid buildings are used, but we locate them adjacent to each others to create shared vertices.}%
+\label{fig:compression}
+\end{figure*}
 
 %
 
@@ -424,12 +438,6 @@ In CityJSON they are conceptually the same vertices and each of the surfaces ref
 It should be said that most of the datasets have very few vertices that are shared (most have less than 2\%, except 2 datasets have around 20\%, \emph{Rotterdam} being one of them).
 To understand the correlation between the compression factor and the percentage of shared vertices in a datasets, we have modified the script to generate random cuboid buildings: the distribution of the buildings is not random, we have enforced that several buildings are adjacent to others (so that they share vertices with other buildings).
 The relationship between the compression and the percentage of shared vertices can be seen in Figure~\ref{fig:compression_adjacent} for around 100 datasets containing exactly \num{1000000} buildings.
-\begin{figure}
-  \centering
-  \includegraphics[width=\linewidth]{figs/compression_adjacent.pdf}
-  \caption{Compression factor of CityJSONSeq files with respect to the percentage of shared vertices in a dataset that was synthetically generated.}% 
-\label{fig:compression_adjacent}
-\end{figure}
 If the number of shared vertices is 0\% this means that we have \num{1000000} buildings that are disconnected; in this case we obtain a compression factor of around 8\% (as was the case in Figure~\ref{fig:compression_random}).
 If all the buildings are adjacent to another one (thus nearly 100\% of the vertices are shared), then we can see that the compression factor is about -10\% (which means that the size of the CityJSONSeq file is larger than that of the CityJSON file).
 
@@ -531,7 +539,7 @@ Finally, because the structure of CityJSONSeq is nearly the same as that of City
 We have already added support for CityJSONSeq in a few of the open-source tools\footnote{\url{https://www.cityjson.org/software/}} and we will continue in the future.
 
 
-% \newpage
+\newpage
 {
 	\begin{spacing}{1.17}
 		\normalsize
