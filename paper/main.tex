@@ -496,7 +496,7 @@ Notice that the dataset \emph{3DBV} contains not only buildings but also the ter
 The results in Table~\ref{tab:ramtime} indicate that there is a significant benefit to using CityJSONSeq over CityJSON, at least for operations that do not require analysing or processing city objects that are close to each other.
 Operations like calculating volumes, merging and subsetting files, finding city objects with specific attributes, etc.\ will all use significantly less memory and will be significantly faster.
 Operations like modifying the CRS or updating the metadata would not even require to loop through the features, just to alter the first object in the file.
-Operations like calculating the surface of shared walls~\citep{Agugiaro22} are however not designed for streams.
+Operations like calculating the surface of shared walls~\citep{Agugiaro22} are however not suitable for streams.
 
 
 %%%
