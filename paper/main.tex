@@ -91,8 +91,8 @@
 % \end{enumerate}
 % Abstracts must contain the title, the author(s) names incl. affiliations, the keywords and a summary of the contribution (research question, relevance, solution, evaluation).
 
-We introduce \emph{CityJSON Text Sequences} (CityJSONSeq in short), a format based on \emph{JSON Text Sequences} and CityJSON\@. 
-CityJSONSeq was added to the CityJSON version 2.0 standard to allow us to stream very large 3D city models.
+We introduce \emph{CityJSON Text Sequences} (CityJSONSeq in short), a format based on CityJSON and \emph{JSON Text Sequences}. 
+CityJSONSeq was added to the CityJSON specifications version 2.0 to allow us to stream very large 3D city models.
 The main idea is to decompose a CityJSON dataset into its individual city objects (each building, each tree, etc.) and create several independent JSON objects of a newly defined type: \texttt{CityJSONFeature}.
 We elaborate on the engineering decisions that were taken to develop CityJSONSeq, we present the open-source software we have developed to convert to and from CityJSONSeq, and we discuss different aspects of the new format, \eg\ filesize, usability, memory footprint, etc.
 For several use-cases, we consider CityJSONSeq to be a better format than CityJSON because: (1) once serialised it is about 10\% more compact; (2) it takes an order of magnitude less time to process; and (3) it uses significantly less memory.
