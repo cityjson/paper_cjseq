@@ -1,24 +1,28 @@
 % chktex-file 18 
 % chktex-file 46 
 
-\documentclass{isprs} % isprs class modified 23-04-2019 (Dennis Wittich)
-\usepackage{subcaption}
-\usepackage{setspace}
-\usepackage{geometry} % added 27-02-2014 Markus Englich
-\usepackage{epstopdf}
-\usepackage[labelsep=period]{caption}  % added 14-04-2016 Markus Englich - Recommendation by Sebastian Brocks
-\usepackage[british]{babel} 
-\usepackage[hang]{footmisc}
-\def\footnotemargin{1em} % added 08-01-2020 Dennis Wittich
+\documentclass[11pt,halfparskip]{scrartcl}
 
-% //-- HL:
-\usepackage{booktabs}
-\usepackage{flushend}
-\usepackage{siunitx}
-\usepackage{threeparttable}
+% to typeset URLs, URIs, and DOIs
 \usepackage{url}
-\newcommand{\ie}{ie}
-\newcommand{\eg}{eg}
+\def\UrlFont{\rmfamily}
+
+\usepackage{mathpazo}
+
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc} %-- pour utiliser des accents en français
+% \usepackage{amsmath,amssymb,amsthm} 
+\usepackage[square]{natbib}
+\usepackage{hyperref}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{fancyvrb}
+\usepackage{siunitx}
+\usepackage{verbatim}
+\usepackage{ltablex}
+\usepackage{threeparttable}
+\usepackage{subcaption}
+
 \usepackage{listings}
 \usepackage{color}
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -31,7 +35,7 @@
     keywordstyle=\color{magenta},
     numberstyle=\tiny\color{codegray},
     stringstyle=\color{codepurple},
-    basicstyle=\footnotesize,
+    basicstyle=\scriptsize,
     breakatwhitespace=false,         
     breaklines=true,                 
     captionpos=b,                    
@@ -43,22 +47,14 @@
     showtabs=false,                  
     tabsize=2
 }
-\lstset{style=mystyle,basicstyle=\ttfamily\footnotesize,breaklines=true}
-% --//
+\lstset{style=mystyle,basicstyle=\ttfamily\scriptsize,breaklines=true}
 
-\usepackage[authoryear]{natbib}
-\def\bibhang{0pt}
+\graphicspath{ {figs/} }
 
-\geometry{a4paper, top=25mm, left=20mm, right=20mm, bottom=25mm, headsep=10mm, footskip=12mm} % added 27-02-2014 Markus Englich
-%\usepackage{enumitem}
+\newcommand{\ie}{ie}
+\newcommand{\eg}{eg}
+\setlength{\tabcolsep}{4pt}
 
-%\usepackage{isprs}
-%\usepackage[perpage,para,symbol*]{footmisc}
-
-%\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
-\captionsetup{justification=centering,font=normal} % thanks to Niclas Borlin 05-05-2016
-\captionsetup[figure]{font=small} % added 23-04-2019 Dennis Wittich
-\captionsetup[table]{font=small} % added 23-04-2019 Dennis Wittich
 
 \begin{document}
 
@@ -69,41 +65,25 @@
 
 
 % KAO: Remove extra spacing
-\author{
- Hugo Ledoux\textsuperscript{1}\thanks{corresponding author}, Gina Stavropoulou\textsuperscript{1}, Balázs Dukai\textsuperscript{2}}
+\author{Hugo Ledoux \and Gina Stavropoulou \and Balázs Dukai}
 
-% KAO: Remove extra newline
-\address{
-	\textsuperscript{1 }Delft University of Technology, the Netherlands---\texttt{[h.ledoux, g.stavropoulou]@tudelft.nl}\\
-	\textsuperscript{2 }3DGI, the Netherlands---\texttt{balazs.dukai@3dgi.nl}\\
-}
+\date{}
+\maketitle
 
-\abstract{
-% The abstract must have the following structure: 
-% \begin{enumerate}
-% \setlength\itemsep{0em}\setlength\parskip{0em}\setlength\topsep{0em}\setlength\partopsep{0em}\setlength\parsep{0em} 
-% \item{Title of the contribution} 
-% \item{Author(s) and affiliation}
-% \item{Keywords (max. 6)}
-% \item{Main body (one page max)}
-% \item{Illustrations (one page max, optional)}
-% \item{References (8 max, optional)}
-% \end{enumerate}
-% Abstracts must contain the title, the author(s) names incl. affiliations, the keywords and a summary of the contribution (research question, relevance, solution, evaluation).
 
+\begin{abstract}
 We introduce \emph{CityJSON Text Sequences} (CityJSONSeq in short), a format based on \emph{JSON Text Sequences} and CityJSON\@. 
 CityJSONSeq was added to the CityJSON version 2.0 standard to allow us to stream very large 3D city models.
 The main idea is to decompose a CityJSON dataset into its individual city objects (each building, each tree, etc.) and create several independent JSON objects of a newly defined type: \texttt{CityJSONFeature}.
 We elaborate on the engineering decisions that were taken to develop CityJSONSeq, we present the open-source software we have developed to convert to and from CityJSONSeq, and we discuss different aspects of the new format, \eg\ filesize, usability, memory footprint, etc.
 For several use-cases, we consider CityJSONSeq to be a better format than CityJSON because: (1) once serialised it is about 10\% more compact; (2) it takes an order of magnitude less time to process; and (3) it uses significantly less memory.
-}
+\end{abstract}
 
-\keywords{3D city modelling, CityJSON, streaming, massive datasets, CityGML}
-\maketitle
+% \keywords{3D city modelling, CityJSON, streaming, massive datasets, CityGML}
 %\saythanks % added 28-02-2014 Markus Englich
 
 
-\sloppy
+% \sloppy
 
 
 %%%
@@ -138,7 +118,7 @@ These objects are either serialised into a text file, or streamed from a server 
 This allows us to avoid a large list of vertices that need to be indexed, as it is the case with CityJSON files (see Section~\ref{sec:cityjson} for details).
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{figs/cj_idea}
+  \includegraphics[width=0.6\linewidth]{cj_idea}
   \caption{An example of a CityJSON file. The vertices are stored in a global list, and the position of the vertices in that list are used to represent the boundaries of the geometries (represented by the arrows, many have been left out for clarity).}%
 \label{fig:cj_idea}
 \end{figure}
@@ -226,7 +206,7 @@ As shown in Figure~\ref{fig:cj_idea}, a CityJSON object, which is a JSON object,
 \label{sec:streaming}
 \begin{figure*}[th]
   \centering
-  \includegraphics[width=0.95\linewidth]{figs/cjseq_idea}
+  \includegraphics[width=0.95\linewidth]{cjseq_idea}
   \caption{The CityJSONSeq of a CityJSON dataset with two buildings contains three JSON objects: one for the metadata, plus one for each building.}%
 \label{fig:cjseq_idea}
 \end{figure*}
@@ -349,12 +329,12 @@ It should be observed that the conversion is an efficient process: the rather la
 \subsection{Filesize comparison}
 
 
-\begin{table*}
+\begin{table}
   \centering
   \begin{threeparttable}
   \caption{The datasets used for the benchmark. }%
   \label{tab:datasets}
-  \small
+  \footnotesize
   \begin{tabular}
     {@{}lcccccrrrcrrr@{}}\toprule
     &&  \multicolumn{2}{c}{\textbf{dataset}} && \multicolumn{3}{c}{\textbf{size of file}} && \multicolumn{3}{c}{\textbf{vertices}}   \\ 
@@ -382,7 +362,7 @@ It should be observed that the conversion is an efficient process: the rather la
       \item ${}^{\text{(d)}}$ percentage of vertices that are used to represent different city objects
     \end{tablenotes}
   \end{threeparttable}
-\end{table*}
+\end{table}
 
 We have converted with \emph{cjseq} several publicly available files, and Table~\ref{tab:datasets} shows an overview of the files stored both in CityJSON and CityJSONSeq.
 The files are available in the reproducibility repository of the paper\footnote{\url{https://github.com/cityjson/paper_cjseq}}.
@@ -411,23 +391,23 @@ The smallest file contains only 526 buildings and its compression factor is -2\%
 
 
 
-\begin{figure*}
+\begin{figure}
   \centering
   \begin{subfigure}[b]{0.5\linewidth}
     \centering
-    \includegraphics[width=\textwidth]{figs/compression_random.pdf}
+    \includegraphics[width=\textwidth]{compression_random.pdf}
     \caption{}%
   \label{fig:compression_random}
   \end{subfigure}%
   \begin{subfigure}[b]{0.5\linewidth}
     \centering
-    \includegraphics[width=\textwidth]{figs/compression_adjacent.pdf}
+    \includegraphics[width=\textwidth]{compression_adjacent.pdf}
     \caption{}%
   \label{fig:compression_adjacent}
   \end{subfigure}
   \caption{Compression factor of CityJSONSeq files for different synthetic datasets. \textbf{(a)} Based on the number of buildings; the buildings are stored as simple cuboids that are randomly generated. \textbf{(b)} Based on the percentage of shared vertices; the same cuboid buildings are used, but we position them adjacent to each others to create shared vertices.}%
 \label{fig:compression}
-\end{figure*}
+\end{figure}
 
 %
 
@@ -455,7 +435,7 @@ Since textures can be used by several features (all the bricks of a building cou
 %%%
 \subsection{Processing speed comparison}
 
-\begin{table*}
+\begin{table}
   \centering
   \caption{Comparison of the processing time and maximum RAM usage for processing CityJSON and CityJSONSeq files. The resident set size (RSS) is used, which is the portion of main memory occupied by the Python script.}
   \small
@@ -479,7 +459,7 @@ Since textures can be used by several features (all the bricks of a building cou
     \bottomrule
   \end{tabular}%
   \label{tab:ramtime}
-\end{table*}
+\end{table}
 
 We compare the speed and memory footprint of accessing each city object in a dataset.
 This operation is common in applications that manipulate 3D city models.
@@ -539,12 +519,7 @@ Finally, because the structure of CityJSONSeq is nearly the same as that of City
 We have already added support for CityJSONSeq in a few of the open-source tools\footnote{\url{https://www.cityjson.org/software/}} and we will continue in the future.
 
 
-\newpage
-{
-	\begin{spacing}{1.17}
-		\normalsize
-		\bibliography{refs} % Include your own bibliography (*.bib), style is given in isprs.cls
-	\end{spacing}
-}
+\bibliographystyle{abbrvnat}
+\bibliography{refs}
 
 \end{document}
