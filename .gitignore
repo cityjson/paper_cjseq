@@ -301,5 +301,7 @@ TSWLatexianTemp*
 #*Notes.bib
 paper/main.pdf
 scripts/data/*
+scripts/cpp/*
+scripts/rust/*
 scripts/data_random/*
 scripts/data_adjacent/*
