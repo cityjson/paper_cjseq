@@ -1,7 +1,7 @@
-% chktex-file 18 
-% chktex-file 46 
+% chktex-file 18
+% chktex-file 46
 
-\documentclass[11pt,halfparskip]{scrartcl}
+\documentclass[11pt,halfparskip,parskip=half]{scrartcl}
 
 % to typeset URLs, URIs, and DOIs
 \usepackage{url}
@@ -11,7 +11,7 @@
 
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc} %-- pour utiliser des accents en français
-% \usepackage{amsmath,amssymb,amsthm} 
+% \usepackage{amsmath,amssymb,amsthm}
 \usepackage[square]{natbib}
 \usepackage{hyperref}
 \usepackage{xspace}
@@ -30,21 +30,21 @@
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 \lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
+    backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
     keywordstyle=\color{magenta},
     numberstyle=\tiny\color{codegray},
     stringstyle=\color{codepurple},
     basicstyle=\scriptsize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
     showstringspaces=false,
-    showtabs=false,                  
+    showtabs=false,
     tabsize=2
 }
 \lstset{style=mystyle,basicstyle=\ttfamily\scriptsize,breaklines=true}
@@ -54,6 +54,22 @@
 \newcommand{\ie}{ie}
 \newcommand{\eg}{eg}
 \setlength{\tabcolsep}{4pt}
+
+\usepackage[table,dvipsnames]{xcolor}
+\definecolor{Mycolour1}{HTML}{D9D7F1}
+\definecolor{Mycolour2}{HTML}{FD9AEF}
+\definecolor{Mycolour3}{HTML}{E7FBBE}
+\definecolor{Mycolour4}{HTML}{9AD0EC}
+\definecolor{Mycolour5}{HTML}{FBD6D2}
+\definecolor{Mycolour6}{HTML}{b3b3b3}
+\definecolor{Mycolour7}{HTML}{F2F2F2}
+\usepackage[tikz]{mdframed}
+\newmdenv[%
+  outerlinewidth=2pt,%
+  roundcorner=10pt,%
+  linecolor=Mycolour6,%
+  backgroundcolor=Mycolour7,%
+]{myframe}
 
 
 \begin{document}
@@ -70,8 +86,27 @@
 \date{}
 \maketitle
 
+\begin{myframe}
+This is the author's version of the work.
+It is posted here only for personal use, not for redistribution and not for commercial use.
+The definitive version will be published on the ISPRS website soon.
+\\
+\\
+Hugo Ledoux, Gina Stavropoulou, and Balázs Dukai (2024). Streaming CityJSON datasets. Proceedings 3D GeoInfo 2024.
+% \\\textsc{doi}: \url{http://dx.doi.org/10.1186/s40965-018-0043-x}
+\\
+\\
+The code of the project is available at
+\\
+\url{https://github.com/cityjson/cjseq/}
+\\
+The reproducibility repository of the paper:
+\\
+\url{https://github.com/cityjson/paper_cjseq}
+\end{myframe}
+
 \begin{abstract}
-We introduce \emph{CityJSON Text Sequences} (CityJSONSeq in short), a format based on CityJSON and \emph{JSON Text Sequences}. 
+We introduce \emph{CityJSON Text Sequences} (CityJSONSeq in short), a format based on CityJSON and \emph{JSON Text Sequences}.
 CityJSONSeq was added to the CityJSON specifications version 2.0 to allow us to stream very large 3D city models.
 The main idea is to decompose a CityJSON dataset into its individual city objects (each building, each tree, etc.) and create several independent JSON objects of a newly defined type: \texttt{CityJSONFeature}.
 We elaborate on the engineering decisions that were taken to develop CityJSONSeq, we present the open-source software we have developed to convert to and from CityJSONSeq, and we discuss different aspects of the new format, \eg\ filesize, usability, memory footprint, etc.
@@ -89,14 +124,14 @@ For several use-cases, we consider CityJSONSeq to be a better format than CityJS
 %
 \section{Introduction}%
 \label{sec:intro}
- 
+
 CityJSON is a JSON-based encoding for storing 3D city models that implements a subset of the CityGML data model version 3.0~\citep{OGC-CityGML3}.
 As further described in \citet{19_ogdss_cityjson}, its development started in 2017 with the aim of offering an easy-to-use and web-ready alternative to the XML-encoded CityGML files~\citep{OGC-CityGML3-XML}, which in practice can be rather verbose, difficult to parse, and complex to manipulate.
-The first official release of CityJSON (version 1.0) was a success: 
+The first official release of CityJSON (version 1.0) was a success:
 \begin{enumerate}
-  \item its JSON-based files were on average around 7 times more compact than their CityGML-XML equivalents without loss of information. See \citet{19_ogdss_cityjson} and \url{https://www.cityjson.org/filesize/} for details, and also \citet{Praschl23} for a comparison with standard computer graphics formats; 
-  \item it was adopted as an OGC Community Standard~\citep{OGC-CityJSON-v10}; 
-  \item it was adopted by the Dutch government as a 3D standard to distribute nationwide 3D datasets; 
+  \item its JSON-based files were on average around 7 times more compact than their CityGML-XML equivalents without loss of information. See \citet{19_ogdss_cityjson} and \url{https://www.cityjson.org/filesize/} for details, and also \citet{Praschl23} for a comparison with standard computer graphics formats;
+  \item it was adopted as an OGC Community Standard~\citep{OGC-CityJSON-v10};
+  \item it was adopted by the Dutch government as a 3D standard to distribute nationwide 3D datasets;
   \item several implementations and plugins have been developed, most notably FME\@.
 \end{enumerate}
 
@@ -110,7 +145,7 @@ Given the increasing size of datasets of 3D cities, with CityGML-XML files often
 
 %
 
-We present in this paper \emph{CityJSON Text Sequences} (henceforth referred to as \emph{CityJSONSeq}), a format based on \emph{JSON Text Sequences}~\citep{IETF-JSONSeq} and CityJSON, and inspired by \emph{GeoJSON Text Sequences}~\citep{IETF-GeoJSONSeq}. 
+We present in this paper \emph{CityJSON Text Sequences} (henceforth referred to as \emph{CityJSONSeq}), a format based on \emph{JSON Text Sequences}~\citep{IETF-JSONSeq} and CityJSON, and inspired by \emph{GeoJSON Text Sequences}~\citep{IETF-GeoJSONSeq}.
 CityJSONSeq was added to the CityJSON version 2.0 standard that was released in 2023 (and also standardised by the OGC, see \citet{OGC-CityJSON-v20}).
 As further described in Section~\ref{sec:cityjsonseq}, the idea is to decompose a (often large) CityJSON file into its individual \emph{features} (\eg\ each \texttt{Building}, each \texttt{Bridge}, etc.) and create several JSON objects of a newly defined type \texttt{CityJSONFeature}.
 These objects are either serialised into a text file, or streamed from a server to client or from one application to another.
@@ -127,7 +162,7 @@ This allows us to avoid a large list of vertices that need to be indexed, as it 
 In Section~\ref{sec:experiments}, we describe  the open-source software we have developed to convert between CityJSON and CityJSONSeq files.
 We also analyse the filesizes of CityJSON and CityJSONSeq for several real-world datasets and synthetic datasets we built.
 It can be observed that one advantage of CityJSONSeq, besides that files containing several thousands of features can be streamed, is that it compresses further the CityJSON files by around 12\%, sometimes more.
-We discuss in Section~\ref{sec:experiments} the reasons for this interesting finding.
+We discuss in    adfd Section~\ref{sec:experiments} the reasons for this interesting finding.
 
 
 %%%
@@ -136,7 +171,7 @@ We discuss in Section~\ref{sec:experiments} the reasons for this interesting fin
 \label{sec:cityjson}
 
 
-As shown in Figure~\ref{fig:cj_idea}, a CityJSON object, which is a JSON object, represents a given geographical area, and it typically contains the following JSON properties: 
+As shown in Figure~\ref{fig:cj_idea}, a CityJSON object, which is a JSON object, represents a given geographical area, and it typically contains the following JSON properties:
 \begin{enumerate}
   \item \texttt{"type"}: it must be \texttt{"CityJSON"};
   \item \texttt{"version"}: \texttt{"2.0"} is the current version;
@@ -155,14 +190,14 @@ As shown in Figure~\ref{fig:cj_idea}, a CityJSON object, which is a JSON object,
   There are several advantages to this approach.
   First, the files can be compressed: 3D vertices are often shared by several surfaces, and repeating them can be costly, especially if they are very precise (sub-millimetre precision is often used).
   Second, this approach increases the topological relationships that are explicitly stored in the file, and several operations (\eg\ determining building adjacency) can be sped up and made more robust.
-  Third, it is very easy to convert all coordinates to a representation listing; the inverse is not true. 
+  Third, it is very easy to convert all coordinates to a representation listing; the inverse is not true.
   However, this list of vertices is the reason why the streaming of geometries is problematic, since in practice it can contain several millions vertices.
   To be able to reconstruct a single Building, all the \texttt{"vertices"} need to loaded in memory, which can mean waiting for millions of unused vertices to be deserialised.
-  \item \texttt{"appearances"}: Both textures and materials for surfaces are supported.  
+  \item \texttt{"appearances"}: Both textures and materials for surfaces are supported.
   The material of a surface is represented with the X3D specifications\footnote{\url{https://en.wikipedia.org/wiki/X3D}}, and for the textures the COLLADA specifications\footnote{\url{https://www.khronos.org/collada/}} are reused.
-  \item \texttt{"geometry-templates"}: 
+  \item \texttt{"geometry-templates"}:
   Geometry templates are geometries defined once and reused by applying a translation, a rotation, and/or a scaling.
-  They are mostly used for city objects like trees, bus stops, and lamp posts. 
+  They are mostly used for city objects like trees, bus stops, and lamp posts.
 \end{enumerate}
 
 
@@ -242,25 +277,25 @@ However, this cannot be implemented in CityJSON directly because all the vertice
 
 
 As shown in Figure~\ref{fig:cjseq_idea}, a CityJSONSeq decomposes a CityJSON object into its features to create a sequence of several JSON objects.
-Those JSON objects are of type \texttt{CityJSONFeature}, which allows the storage of a single feature, for instance a \texttt{Building}, together with its ``children'' objects (\eg\ a \texttt{BuildingPart} and/or a \texttt{BuildingInstallation}). 
+Those JSON objects are of type \texttt{CityJSONFeature}, which allows the storage of a single feature, for instance a \texttt{Building}, together with its ``children'' objects (\eg\ a \texttt{BuildingPart} and/or a \texttt{BuildingInstallation}).
 Each feature is independent, it has its own list of vertices (which is thus \emph{local} to the JSON object, and is usually rather small, see next section for details) and its own textures and materials (if any).
 The allowed properties are shown in Figure~\ref{fig:cjfeature}; notice that the \texttt{"id"} property is used to clearly identity the ``parent'' of the feature, in case there are children.
 \begin{figure}
 \begin{lstlisting}
 {
   "type": "CityJSONFeature",
-  "id": "id-1", 
+  "id": "id-1",
   "CityObjects": {
     "id-1": {
-      "type": "Building", 
-      "attributes": { 
+      "type": "Building",
+      "attributes": {
         "roofType": "gabled roof"
       },
       "children": ["mybalcony"],
       "geometry": [...]
     },
     "mybalcony": {
-      "type": "BuildingInstallation", 
+      "type": "BuildingInstallation",
       "parents": ["id-1"],
       "geometry": [...]
     }
@@ -284,9 +319,9 @@ CityJSONSeq follows the specifications of \texttt{ndjson} (newline delimited JSO
   \item the following JSON Objects must be of type \texttt{CityJSONFeature}.
 \end{enumerate}
 
-Note that a \texttt{CityJSONFeature} object does not contain all the information that is required for reconstructing the feature. 
-Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geometry-templates"} must be known in order to correctly reconstruct and georeference the city objects. 
-The rule \#4 ensures that those are available. 
+Note that a \texttt{CityJSONFeature} object does not contain all the information that is required for reconstructing the feature.
+Most commonly, the \texttt{"transform"} property, the CRS, and the \texttt{"geometry-templates"} must be known in order to correctly reconstruct and georeference the city objects.
+The rule \#4 ensures that those are available.
 The CityJSON object must contain a \texttt{"transform"} property and eventually the other properties if needed; \texttt{"CityObjects"} and \texttt{"vertices"} must be present but they must be empty (to ensure that the JSON object is valid).
 
 
@@ -296,8 +331,8 @@ The CityJSONSeq for Figure~\ref{fig:cjseq_idea} is shown in Figure~\ref{fig:stre
 \begin{figure*}
   \begin{lstlisting}
   {"type":"CityJSON","version":"2.0","transform": {"scale":[1.0,1.0,1.0],"translate":[0.0, 0.0, 0.0]},"metadata":{"referenceSystem":"https://www.opengis.net/def/crs/EPSG/0/7415"},"CityObjects":{},"vertices":[]}
-  {"type":"CityJSONFeature","id":"id-1","CityObjects":{...},"vertices":[...]} 
-  {"type":"CityJSONFeature","id":"id-2","CityObjects":{...},"vertices":[...]} 
+  {"type":"CityJSONFeature","id":"id-1","CityObjects":{...},"vertices":[...]}
+  {"type":"CityJSONFeature","id":"id-2","CityObjects":{...},"vertices":[...]}
   \end{lstlisting}
 \caption{An example of a CityJSONSeq stream containing 3 features.}%
 \label{fig:stream}
@@ -313,7 +348,7 @@ The CityJSONSeq for Figure~\ref{fig:cjseq_idea} is shown in Figure~\ref{fig:stre
 
 To convert between CityJSON and CityJSONSeq files (and vice-versa), we have developed the open-source software \emph{cjseq}, which is available at \url{https://github.com/cityjson/cjseq/} under a permissive open-source license.
 The command-line program handles the conversion not only of the geometries, but also of the materials, the textures, and the geometry templates that the dataset could contain.
-It includes three sub-commands: 
+It includes three sub-commands:
 \begin{enumerate}
   \item \texttt{cat}: CityJSON $\rightarrow$ CityJSONSeq;
   \item \texttt{collect}: CityJSONSeq $\rightarrow$ CityJSON;
@@ -336,8 +371,8 @@ It should be observed that the conversion is an efficient process: the rather la
   \footnotesize
   \begin{tabular}
     {@{}lcccccrrrcrrr@{}}\toprule
-    &&  \multicolumn{2}{c}{\textbf{dataset}} && \multicolumn{3}{c}{\textbf{size of file}} && \multicolumn{3}{c}{\textbf{vertices}}   \\ 
-    \cmidrule{3-4} \cmidrule{6-8} \cmidrule{10-12} 
+    &&  \multicolumn{2}{c}{\textbf{dataset}} && \multicolumn{3}{c}{\textbf{size of file}} && \multicolumn{3}{c}{\textbf{vertices}}   \\
+    \cmidrule{3-4} \cmidrule{6-8} \cmidrule{10-12}
      && CityObjects &  app.\footnotesize ${}^{\text{(a)}}$ && CityJSON & CityJSONSeq & compr.\footnotesize ${}^{\text{(b)}}$ && total & largest\footnotesize ${}^{\text{(c)}}$ & shared\footnotesize ${}^{\text{(d)}}$ \\
     \midrule
     \textbf{3DBAG}          && \qty{1110} bldgs    &         && \qty{6.7}{\mega\byte} & \qty{5.9}{\mega\byte} & 12\%  &&     \num{82509} &    \num{4112} &  0.1\% \\
@@ -369,7 +404,7 @@ The files are available in the reproducibility repository of the paper\footnote{
 %
 
 First observe that---contrary to intuition---the filesize of a dataset serialised as a CityJSONSeq file is around 12\% compacter than serialised as a CityJSON file, and in the case of \emph{Helsinki} it is 28\%.
-An even larger compression factor is noted in most datasets whose texture, materials, semantics and attributes have been removed. 
+An even larger compression factor is noted in most datasets whose texture, materials, semantics and attributes have been removed.
 The main reason for this is that the indices of the vertices are low integers for each feature (because the lowest index in each feature is always ``0'' and is incremented by 1 until the total number of vertices), and they do not increase to very large integers in contrast to the vertices in CityJSON\@.
 For instance, the dataset \emph{Helsinki} contains a total of more than 3 millions vertices, but its largest feature contains only but 2202 vertices.
 The fact that many indices are used for representing the geometries (and the textures) means that if several large numbers are used then the filesize will grow; if the maximum vertex index is around 2000 for each feature then the filesize will be reduced.
@@ -381,10 +416,10 @@ The reasons for the increase (or decrease) are many, and we discuss in the follo
 
 %
 
-\paragraph{Number of vertices.} 
+\paragraph{Number of vertices.}
 If a dataset has few vertices, as it is the case with \emph{Rotterdam}, then the indices will not be large integers and this might not be favourable for the compression.
 As an experiment, we have created around 100 synthetic CityJSON datasets containing buildings, and each building is represented as a simple cube, which is randomly generated.
-There are no attributes, no semantics, and no textures/materials. 
+There are no attributes, no semantics, and no textures/materials.
 Figure~\ref{fig:compression_random} shows that, as the CityJSON filesize increases, the compression factor increases.
 The smallest file contains only 526 buildings and its compression factor is -2\% (thus CityJSONSeq has a larger filesize than that of CityJSON), while the largest file has \num{3960105} buildings, and a compression factor of more than 12\%.
 
@@ -410,8 +445,8 @@ The smallest file contains only 526 buildings and its compression factor is -2\%
 
 %
 
-\paragraph{Shared vertices.} 
-The number of shared vertices between different city objects also influences the compression factor. 
+\paragraph{Shared vertices.}
+The number of shared vertices between different city objects also influences the compression factor.
 Shared vertices are those used to represent walls incident to two adjacent buildings.
 In CityJSON they are conceptually the same vertices and each of the surfaces refer to them, but in CityJSONSeq they have to be listed separately in each of the buildings.
 It should be said that most of the datasets have very few vertices that are shared (most have less than 2\%, except 2 datasets have around 20\%, \emph{Rotterdam} being one of them).
@@ -422,7 +457,7 @@ If all the buildings are adjacent to another one (thus nearly 100\% of the verti
 
 %
 
-\paragraph{Textures.} 
+\paragraph{Textures.}
 It should also be noticed that the attributes attached to city objects, as well as the semantics attached to surfaces, have no influence on the compression factor since they are local to each city object.
 However, we can state that textures have an influence on the compression factor.
 See for instance the dataset \emph{Helsinki} and its counterpart \emph{Helsinki\_tex} (which is the same the same geometries and attributes, only the textures were removed).
@@ -440,8 +475,8 @@ Since textures can be used by several features (all the bricks of a building cou
   \small
   \begin{tabular}
     {@{}lcrrcrrr@{}}\toprule
-    &&  \multicolumn{2}{c}{\textbf{RAM used (MB)}} && \multicolumn{3}{c}{\textbf{time (s)}} \\ 
-    \cmidrule{3-4} \cmidrule{6-8} 
+    &&  \multicolumn{2}{c}{\textbf{RAM used (MB)}} && \multicolumn{3}{c}{\textbf{time (s)}} \\
+    \cmidrule{3-4} \cmidrule{6-8}
      && CityJSON & CityJSONSeq && CityJSON & CityJSONSeq & diff \\
     \midrule
      \textbf{3DBAG}         &&   76.9 &  16.1  &&   0.10 & 0.07 & 1.4X \\
@@ -477,7 +512,7 @@ The results for both the maximum memory footprint and the time used are shown in
 The scripts are available in the reproducibility repository of the paper\footnote{\url{https://github.com/cityjson/paper_cjseq}}.
 
 
-Notice that the dataset \emph{3DBV} contains not only buildings but also the terrain, and a few large areas are stored as a triangulation containing a very large amount of vertices; this is the reason why the maximum memory use is larger than for other datasets. 
+Notice that the dataset \emph{3DBV} contains not only buildings but also the terrain, and a few large areas are stored as a triangulation containing a very large amount of vertices; this is the reason why the maximum memory use is larger than for other datasets.
 
 %
 
@@ -501,20 +536,20 @@ It should be noticed that the CityJSON specification does not prescribe the stor
 In practice, CityJSONSeq can be stored in a variety of ways, for instance in a single file, each feature in a separate file, in a database, etc.
 The optimal storage solution depends on the implementing application.
 As a concrete example, CityJSONSeq is used by \emph{cjdb}~\citep{Powalka23}, an importer/exporter tool that stores one feature per row in PostgresSQL.
-Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API\footnote{\url{https://api.3dbag.nl/}}, which contains all 10 million buildings in the Netherlands with detailed roofs~\citep{Peters22}. 
+Additionally, in order to facilitate pagination, CityJSONSeq is the return format of the 3DBAG API\footnote{\url{https://api.3dbag.nl/}}, which contains all 10 million buildings in the Netherlands with detailed roofs~\citep{Peters22}.
 
 %
 
 From the point-of-view of practitioners, we should stress that CityJSONSeq can easily be processed with \emph{Unix pipes} (also called \emph{pipelines}).
-Pipelines allow us to chain several processes together, the output of a process becomes the input of the next one, and so on. 
+Pipelines allow us to chain several processes together, the output of a process becomes the input of the next one, and so on.
 Given 2 processes, the 2nd one can usually start before the 1st one has finished processing all the data.
 This means that, in practice, the processing of a dataset can be performed by writing several programs that perform a few small tasks; this makes the development and maintenance of code simpler.
-Moreover, it allows us to write the code in different languages. 
+Moreover, it allows us to write the code in different languages.
 The pipelines used for preparing the datasets used in this paper were actually a mix of Python (the program \emph{cjio} and \emph{cjdb}) and Rust (\emph{cjseq} and \emph{cjval}), and another program written in C++ could easy be added.
 
 %
 
-Finally, because the structure of CityJSONSeq is nearly the same as that of CityJSON, in practice adding support for CityJSONSeq requires a minimum amount of effort since most of the code to parse and/or generate CityJSON objects can be reused. 
+Finally, because the structure of CityJSONSeq is nearly the same as that of CityJSON, in practice adding support for CityJSONSeq requires a minimum amount of effort since most of the code to parse and/or generate CityJSON objects can be reused.
 We have already added support for CityJSONSeq in a few of the open-source tools\footnote{\url{https://www.cityjson.org/software/}} and we will continue in the future.
 
 
